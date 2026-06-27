@@ -1,6 +1,7 @@
 import mysql.connector
 import pandas as pd
 import os
+
 conn = mysql.connector.connect(
     host='localhost', user='root', password='root', database='idx_exchange')
 query = """
