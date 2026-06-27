@@ -1,6 +1,10 @@
 import nltk
 from collections import Counter
 from nltk.util import ngrams
+import pandas as pd
+import os
+
+df = pd.read_csv(os.path.abspath('../data/processed/listing_sample.csv'))
 # Extract bigrams from remarks
 all_text = ' '.join(df['remarks'].dropna().str.lower())
 tokens = nltk.word_tokenize(all_text)
