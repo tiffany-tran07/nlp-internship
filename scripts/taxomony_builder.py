@@ -4,9 +4,8 @@ import nltk
 from collections import Counter
 from nltk.util import ngrams
 import pandas as pd
-import os
 
-df = pd.read_csv(os.path.abspath('../data/processed/listing_sample.csv'))
+df = pd.read_csv('data/processed/listing_sample.csv')
 # Extract bigrams from remarks
 all_text = ' '.join(df['remarks'].dropna().str.lower())
 tokens = nltk.word_tokenize(all_text)
@@ -20,5 +19,5 @@ for bigram, count in freq.most_common(200):
     print(f"{' '.join(bigram)}: {count}")
 
 # Save taxonomy to JSON file
-with open(os.path.abspath('../data/processed/taxonomy.json'), 'w') as f:
+with open('data/processed/taxonomy.json', 'w') as f:
     json.dump(taxomony, f)
