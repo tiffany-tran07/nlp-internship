@@ -14,6 +14,9 @@ class TextCleaner:
         text = self.normalize_measurements(text)
         text = self.expand_abbreviations(text)
         return text.strip()
+    def normalize_unicode(self, text):
+        # Normalize unicode characters to ASCII
+        return text.encode('ascii', 'ignore').decode('ascii')
     def normalize_prices(self, text):
         # 450k → 450000
         text = re.sub(r'(\d+)k', lambda m: str(int(m.group(1))*1000), text,
@@ -21,6 +24,15 @@ class TextCleaner:
         # 1.2m → 1200000
         text = re.sub(r'(\d+\.?\d*)m', lambda m:
         str(int(float(m.group(1))*1000000)), text, flags=re.I)
+        return text
+    def normalize_measurements(self, text):
+        # 1,500 sqft → 1500 sqft
+        text = re.sub(r'(\d+),(\d+)', r'\1\2', text)
+        return text
+    def expand_abbreviations(self, text):
+        for abbrev, full in self.abbrev_map.items():
+            text = re.sub(r'\b' + re.escape(abbrev) + r'\b', full, text,
+            flags=re.I)
         return text
     def profile_column(self, df, column_name):
         # Analyze what's actually in L_Remarks
