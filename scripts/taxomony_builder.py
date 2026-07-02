@@ -9,12 +9,12 @@ df = pd.read_csv('data/processed/listing_sample.csv')
 # Extract bigrams from remarks
 all_text = ' '.join(df['remarks'].dropna().str.lower())
 tokens = nltk.word_tokenize(all_text)
-bigrams = list(ngrams(tokens, 2))
+bigrams = list(ngrams(tokens, 1))
 freq = Counter(bigrams)
 # make json object for taxonomy
 taxomony = {'terms': []}
 # Top 200 bigrams become taxonomy seed
-for bigram, count in freq.most_common(200):
+for bigram, count in freq.most_common(1000):
     taxomony['terms'].append({'id': f"term_{len(taxomony['terms'])}", 'term': ' '.join(bigram), 'count': count})
     print(f"{' '.join(bigram)}: {count}")
 

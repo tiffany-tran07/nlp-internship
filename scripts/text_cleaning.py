@@ -7,9 +7,12 @@ import unicodedata
 class TextCleaner:
     def __init__(self):
         self.abbrev_map = {
-            'br': 'bedroom', 'ba': 'bathroom', 'sqft': 'square feet', 'sq ft': 'square feet', 'sq. ft.': 'square feet', 'sq. ft': 'square feet',
-            'w/o': 'without', 'w/': 'with', 'mbr': 'master bedroom'
+            'br': 'bedroom', 'ba': 'bathroom', 'sqft': 'square feet', 'sq ft': 'square feet', 'sq. ft.': 'square feet', 'sq. ft': 'square feet','sf': 'square feet',
+            'w/o': 'without', 'w/': 'with', 'mbr': 'master bedroom', 'condo': 'condominium', 'ft': 'feet', 'mi': 'mile', 'yd': 'yard', 'ac': 'air conditioning', 
+            'a/c': 'air conditioning', 'hoa': 'homeowners association', 'th': 'townhouse', 'co-op': 'cooperative', 'coop': 'cooperative', 'bldg': 'building', 
+            'flr': 'floor', 'lvl': 'level', 'apt.': 'apartment', 'apt': 'apartment', 'blvd': 'boulevard', 'ave': 'avenue', 'st': 'street', 'rd': 'road',
         }
+
     def clean_text(self, text):
         text = self.normalize_unicode(text)
         text = self.normalize_prices(text)
@@ -81,3 +84,4 @@ print(f"Null rate: {profile['null_rate']}")
 print(f"Common abbreviations: {profile['common_abbreviations']}")
 print(f"Price mentions: {profile['price_mentions']}")
 print(f"Has HTML: {profile['has_html']}")
+print(f"Abbreviation Num: {len(cleaner.abbrev_map)}")
