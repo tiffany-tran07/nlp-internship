@@ -1,12 +1,14 @@
+from email.mime import text
 import re
 import pandas as pd
 import nltk
+import unicodedata
 
 class TextCleaner:
     def __init__(self):
         self.abbrev_map = {
             'br': 'bedroom', 'ba': 'bathroom', 'sqft': 'square feet',
-            'w/': 'with', 'w/o': 'without', 'mbr': 'master bedroom'
+            'w/o': 'without', 'w/': 'with', 'mbr': 'master bedroom'
         }
     def clean_text(self, text):
         text = self.normalize_unicode(text)
@@ -16,7 +18,7 @@ class TextCleaner:
         return text.strip()
     def normalize_unicode(self, text):
         # Normalize unicode characters to ASCII
-        return text.encode('ascii', 'ignore').decode('ascii')
+        return  unicodedata.normalize("NFKC", text)
     def normalize_prices(self, text):
         # 450k → 450000
         text = re.sub(r'(\d+)k', lambda m: str(int(m.group(1))*1000), text,
@@ -30,10 +32,17 @@ class TextCleaner:
         text = re.sub(r'(\d+),(\d+)', r'\1\2', text)
         return text
     def expand_abbreviations(self, text):
-        for abbrev, full in self.abbrev_map.items():
-            text = re.sub(r'\b' + re.escape(abbrev) + r'\b', full, text,
-            flags=re.I)
-        return text
+        # special cases first
+        text = re.sub(r'(?<!\w)w/\s*', 'with ', text, flags=re.I)
+        text = re.sub(r'(?<!\w)w/o\s*', 'without ', text, flags=re.I)
+
+        # general abbreviations
+        for abbrev, full in sorted(self.abbrev_map.items(), key=lambda x: len(x[0]), reverse=True):
+            pattern = r'(?<!\w)' + re.escape(abbrev) + r'(?!\w)'
+            text = re.sub(pattern, full, text, flags=re.I)
+
+        return re.sub(r'\s+', ' ', text).strip()
+
     def profile_column(self, df, column_name):
         # Analyze what's actually in L_Remarks
         return {
@@ -53,7 +62,14 @@ class TextCleaner:
         return freq_dist.most_common(top_k)
     
     def _detect_abbreviations(self, series):
-        abbrev_pattern = r'\b(' + '|'.join(re.escape(abbrev) for abbrev in self.abbrev_map.keys()) + r')\b'
+        abbrev_pattern = (
+        r'(?<!\w)('
+        + '|'.join(
+            re.escape(a)
+            for a in sorted(self.abbrev_map, key=len, reverse=True)
+        )
+        + r')(?!\w)'
+)
         all_text = ' '.join(series.dropna().str.lower())
         found_abbrevs = re.findall(abbrev_pattern, all_text)
         return list(set(found_abbrevs))
