@@ -7,7 +7,7 @@ import unicodedata
 class TextCleaner:
     def __init__(self):
         self.abbrev_map = {
-            'br': 'bedroom', 'ba': 'bathroom', 'sqft': 'square feet',
+            'br': 'bedroom', 'ba': 'bathroom', 'sqft': 'square feet', 'sq ft': 'square feet', 'sq. ft.': 'square feet', 'sq. ft': 'square feet',
             'w/o': 'without', 'w/': 'with', 'mbr': 'master bedroom'
         }
     def clean_text(self, text):
@@ -58,7 +58,7 @@ class TextCleaner:
         all_text = ' '.join(series.dropna().str.lower())
         tokens = nltk.word_tokenize(all_text)
         ngrams_list = list(nltk.ngrams(tokens, n))
-        freq_dist = nltk.FreqDist(ngrams_list)
+        freq_dist = nltk.Counter(ngrams_list)
         return freq_dist.most_common(top_k)
     
     def _detect_abbreviations(self, series):
@@ -74,8 +74,10 @@ class TextCleaner:
         found_abbrevs = re.findall(abbrev_pattern, all_text)
         return list(set(found_abbrevs))
 # Use this to guide your cleaning strategy:
-# cleaner = TextCleaner()
-# df = pd.read_csv('data/processed/listing_sample.csv')
-# profile = cleaner.profile_column(df, 'remarks')
-# print(f"HTML tags found in {profile['has_html']} listings")
-# print(f"Common abbreviations: {profile['common_abbreviations']}")
+cleaner = TextCleaner()
+df = pd.read_csv('data/processed/listing_sample.csv')
+profile = cleaner.profile_column(df, 'remarks')
+print(f"Null rate: {profile['null_rate']}")
+print(f"Common abbreviations: {profile['common_abbreviations']}")
+print(f"Price mentions: {profile['price_mentions']}")
+print(f"Has HTML: {profile['has_html']}")

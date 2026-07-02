@@ -1,0 +1,6 @@
+Listing Stats
+    Null rate: 0.0
+    Average length: 1265.652
+    Common abbreviations: ['ba', 'sq ft', 'w/', 'br', 'sq. ft', 'sqft', 'sq. ft.']
+    Price mentions: 67
+    Has HTML: 1
