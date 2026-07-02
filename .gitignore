@@ -1,2 +1,3 @@
 venv/
 data/
+scripts/__pycache__/
