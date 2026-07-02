@@ -1,0 +1,20 @@
+Cleaned Listing Examples
+    Ex. 1 (sqft => square feet)
+        Original: 
+            This charming 3 Bed, 2 bath home sits on 1.46-acre lot and offers 1,356 sqft of beautifully updated living space. 
+        Cleaned: 
+            This charming 3 Bed, 2 bath home sits on 1.46-acre lot and offers 1356 square feet of beautifully updated living space.
+
+    Ex. 2 (w/ => with)
+        Original: 
+            SELF-SUSTAINING LUXURY ESTATE W/ CASITA, APARTMENT, POOL AND BEAUTIFUL PANORAMIC VALLEY VIEWS!
+        Cleaned: 
+            SELF-SUSTAINING LUXURY ESTATE with CASITA, APARTMENT, POOL AND BEAUTIFUL PANORAMIC VALLEY VIEWS!
+    
+    Ex. 3 (BR => bedroom) (BA => bathroom)
+        Original: 
+            ...this 1 BR 1.5 BA home offers stunning city skyline views, a glimpse of Coronado, peek views of the bay, 
+            and the historic Santa Fe Depot as your backdrop.
+            Cleaned:  
+            ...this 1 bedroom 1.5 bathroom home offers stunning city skyline views, a glimpse of Coronado, peek views of the bay,
+            and the historic Santa Fe Depot as your backdrop. 
