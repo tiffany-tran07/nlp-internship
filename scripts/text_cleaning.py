@@ -1,4 +1,6 @@
 import re
+import pandas as pd
+import nltk
 
 class TextCleaner:
     def __init__(self):
@@ -20,3 +22,32 @@ class TextCleaner:
         text = re.sub(r'(\d+\.?\d*)m', lambda m:
         str(int(float(m.group(1))*1000000)), text, flags=re.I)
         return text
+    def profile_column(self, df, column_name):
+        # Analyze what's actually in L_Remarks
+        return {
+            'null_rate': df[column_name].isnull().mean(),
+            'avg_length': df[column_name].str.len().mean(),
+            'common_terms': self._extract_top_ngrams(df[column_name]),
+            'price_mentions': df[column_name].str.contains(r'\$\d').sum(),
+            'has_html': df[column_name].str.contains('<').sum(),
+            'common_abbreviations': self._detect_abbreviations(df[column_name])
+        }
+    
+    def _extract_top_ngrams(self, series, n=2, top_k=200):
+        all_text = ' '.join(series.dropna().str.lower())
+        tokens = nltk.word_tokenize(all_text)
+        ngrams_list = list(nltk.ngrams(tokens, n))
+        freq_dist = nltk.FreqDist(ngrams_list)
+        return freq_dist.most_common(top_k)
+    
+    def _detect_abbreviations(self, series):
+        abbrev_pattern = r'\b(' + '|'.join(re.escape(abbrev) for abbrev in self.abbrev_map.keys()) + r')\b'
+        all_text = ' '.join(series.dropna().str.lower())
+        found_abbrevs = re.findall(abbrev_pattern, all_text)
+        return list(set(found_abbrevs))
+# Use this to guide your cleaning strategy:
+# cleaner = TextCleaner()
+# df = pd.read_csv('data/processed/listing_sample.csv')
+# profile = cleaner.profile_column(df, 'remarks')
+# print(f"HTML tags found in {profile['has_html']} listings")
+# print(f"Common abbreviations: {profile['common_abbreviations']}")
