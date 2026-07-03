@@ -1,2 +1,6 @@
 Remark Notes:
-- 
+- Contain detailed descriptions of the housing units
+- All notes are meant to "sell" the house to the buyer, so downsides are never mentioned
+- The detail of the description varies for each property
+- The number of bedrooms and bathrooms are common selling points for these properties
+- Neighborhood environment is also a common selling point
