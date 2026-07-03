@@ -7,16 +7,21 @@ import unicodedata
 class TextCleaner:
     def __init__(self):
         self.abbrev_map = {
-            'br': 'bedroom', 'ba': 'bathroom', 'sqft': 'square feet', 'sq ft': 'square feet', 'sq. ft.': 'square feet', 'sq. ft': 'square feet','sf': 'square feet',
-            'w/o': 'without', 'w/': 'with', 'mbr': 'master bedroom', 'condo': 'condominium', 'ft': 'feet', 'mi': 'mile', 'yd': 'yard', 'ac': 'air conditioning', 
-            'a/c': 'air conditioning', 'hoa': 'homeowners association', 'th': 'townhouse', 'co-op': 'cooperative', 'coop': 'cooperative', 'bldg': 'building', 
-            'flr': 'floor', 'lvl': 'level', 'apt.': 'apartment', 'apt': 'apartment', 'blvd': 'boulevard', 'ave': 'avenue', 'st': 'street', 'rd': 'road',
+            'br': 'bedroom', 'ba': 'bathroom', 'lr': 'living room', 'sqft': 'square feet', 'sq ft': 'square feet', 'sq. ft.': 'square feet', 'sq. ft': 'square feet',
+            'sf': 'square feet','w/o': 'without', 'w/': 'with', 'mbr': 'master bedroom', 'condo': 'condominium', 'ft': 'feet', 'mi': 'mile', 'yd': 'yard', 
+            'ac': 'air conditioning', 'a/c': 'air conditioning', 'hoa': 'homeowners association', 'th': 'townhouse', 'co-op': 'cooperative', 'coop': 'cooperative', 
+            'bldg': 'building', 'flr': 'floor', 'lvl': 'level', 'apt.': 'apartment', 'apt': 'apartment', 'blvd': 'boulevard', 'ave': 'avenue', 'st': 'street','one:':'1', 
+            'two':'2', 'three':'3', 'four':'4', 'five':'5', 'six':'6', 'seven':'7', 'eight':'8', 'nine':'9', '@': 'at'
         }
 
     def clean_text(self, text):
         text = self.normalize_unicode(text)
         text = self.normalize_prices(text)
         text = self.normalize_measurements(text)
+        text = self.lowercase_text(text)
+        text = self.remove_html_tags(text)
+        text = self.remove_url(text)
+        text = self.remove_email(text)
         text = self.expand_abbreviations(text)
         return text.strip()
     def normalize_unicode(self, text):
@@ -34,6 +39,17 @@ class TextCleaner:
         # 1,500 sqft → 1500 sqft
         text = re.sub(r'(\d+),(\d+)', r'\1\2', text)
         return text
+    def lowercase_text(self, text):
+        return text.lower()
+    def remove_html_tags(self, text):
+        # Remove HTML tags
+        return re.sub(r'<.*?>', '', text)
+    def normalize_url(self, text):
+        # Remove URLs
+        return re.sub(r'http\S+|www\S+|https\S+', '<URL>', text, flags=re.MULTILINE)
+    def normalize_email(self, text):
+        # Remove email addresses
+        return re.sub(r'\S+@\S+', '<EMAIL>', text)
     def expand_abbreviations(self, text):
         # special cases first
         text = re.sub(r'(?<!\w)w/\s*', 'with ', text, flags=re.I)
