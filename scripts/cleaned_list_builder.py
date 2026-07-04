@@ -21,6 +21,7 @@ cleaned_remarks = df['remarks'].dropna().apply(cleaner.clean_text)
 df.drop(columns=['remarks'], inplace=True)
 df['cleaned_remarks'] = cleaned_remarks
 print("Cleaned remarks Length:", len(df['cleaned_remarks'].dropna()))
-\
+
 df.to_csv('data/processed/cleaned_listing_sample.csv', index=False)
+
 
