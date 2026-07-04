@@ -1,6 +1,11 @@
-Listing Stats
+Listing Stats (Before Cleaning):
     Null rate: 0.0
-    Average length: 1265.652
-    Common abbreviations: ['ba', 'sq ft', 'w/', 'br', 'sq. ft', 'sqft', 'sq. ft.']
+    Common abbreviations: ['condo', 'three', 'sq ft', 'ave', 'nine', 'sqft', 'hoa', 'sq. ft.', 'br', 'ba', 'two', 'sq. ft', 'seven', 'ac', 'w/', 'a/c', 'lr', 'mi', 'four', 'st', '@', 'coop', 'six', 'ft', 'eight', 'five', 'blvd', 'sf']
     Price mentions: 67
     Has HTML: 1
+
+Listing Stats (After Cleaning):
+    Null rate: 0.0
+    Common abbreviations: []
+    Price mentions: 67
+    Has HTML: 0
