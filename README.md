@@ -12,4 +12,5 @@ if punkt has not been downloaded, in a python file run
 ```
     import nlkt
     nlkt.download('punkt')
+    nltk.download('stopwords')
 ```
