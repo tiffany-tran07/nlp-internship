@@ -2,8 +2,19 @@ import re
 class EntityExtractor:
     def extract_bedrooms(self, text):
         patterns = [
-            r'(\d+)\s*(?:bed|br|bedroom)s?',
+            r'(\d+)\s*(?:bedroom)s?',
             r'(\d+)bd'
+        ]
+        for pattern in patterns:
+            match = re.search(pattern, text, re.I)
+            if match:
+                return int(match.group(1))
+        return None
+    
+    def extract_bathrooms(self, text):
+        patterns = [
+            r'(\d+)\s*(?:bathroom)s?',
+            r'(\d+)ba'
         ]
         for pattern in patterns:
             match = re.search(pattern, text, re.I)
@@ -14,6 +25,10 @@ class EntityExtractor:
     def extract_price(self, text):
     # Assumes cleaned text from Week 2
         match = re.search(r'\$?(\d{5,})', text)
+        return int(match.group(1)) if match else None
+    
+    def extract_sqft(self, text):
+        match = re.search(r'(\d{3,5})\s*(?:square feet)', text, re.I)
         return int(match.group(1)) if match else None
     
     def extract_amenities(self, text):

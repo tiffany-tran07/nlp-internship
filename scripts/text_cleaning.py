@@ -7,7 +7,7 @@ import unicodedata
 class TextCleaner:
     def __init__(self):
         self.abbrev_map = {
-            'br': 'bedroom', 'ba': 'bathroom', 'lr': 'living room', 'sqft': 'square feet', 'sq ft': 'square feet', 'sq. ft.': 'square feet', 'sq. ft': 'square feet',
+            'br': 'bedroom', 'ba': 'bathroom', 'ba': 'bath', 'br': 'bed', 'lr': 'living room', 'sqft': 'square feet', 'sq ft': 'square feet', 'sq. ft.': 'square feet', 'sq. ft': 'square feet',
             'sf': 'square feet','w/o': 'without', 'w/': 'with', 'mbr': 'master bedroom', 'condo': 'condominium', 'ft': 'feet', 'mi': 'mile', 'yd': 'yard', 
             'ac': 'air conditioning', 'a/c': 'air conditioning', 'hoa': 'homeowners association', 'th': 'townhouse', 'co-op': 'cooperative', 'coop': 'cooperative', 
             'bldg': 'building', 'flr': 'floor', 'lvl': 'level', 'apt.': 'apartment', 'apt': 'apartment', 'blvd': 'boulevard', 'ave': 'avenue', 'st': 'street','one:':'1', 
