@@ -15,6 +15,17 @@ class EntityExtractor:
     # Assumes cleaned text from Week 2
         match = re.search(r'\$?(\d{5,})', text)
         return int(match.group(1)) if match else None
+    
+    def extract_amenities(self, text):
+        amenities = []
+        if re.search(r'pool', text, re.I):
+            amenities.append('pool')
+        if re.search(r'garage', text, re.I):
+            amenities.append('garage')
+        if re.search(r'gym', text, re.I):
+            amenities.append('gym')
+        return amenities
+    
     def extract_all(self, text):
         return {
             'bedrooms': self.extract_bedrooms(text),
