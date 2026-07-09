@@ -24,6 +24,18 @@ class EntityExtractor:
             amenities.append('garage')
         if re.search(r'gym', text, re.I):
             amenities.append('gym')
+        if re.search(r'fireplace', text, re.I):
+            amenities.append('fireplace')
+        if re.search(r'balcony', text, re.I):
+            amenities.append('balcony')
+        if re.search(r'basement', text, re.I):
+            amenities.append('basement')
+        if re.search(r'air conditioning', text, re.I):
+            amenities.append('air conditioning')
+        if re.search(r'washer/dryer', text, re.I):
+            amenities.append('washer/dryer')
+        if re.search(r'patio', text, re.I):
+            amenities.append('patio')
         return amenities
     
     def extract_all(self, text):
