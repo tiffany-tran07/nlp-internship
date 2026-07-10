@@ -2,6 +2,14 @@ import re
 import json
 
 class EntityExtractor:
+    def __init__(self, taxonomy_path='data/processed/taxonomy.json'):
+        with open(taxonomy_path, 'r') as f:
+            taxonomy = json.load(f)
+        # pre-compile a regex for each term once, at init — not per call
+        self.amenity_patterns = [
+            (term_obj['term'], re.compile(r'\b' + re.escape(term_obj['term']) + r'\b', re.I))
+            for term_obj in taxonomy.get('terms', [])
+        ]
     def extract_bedrooms(self, text):
         patterns = [
             r'(\d+)\s*(?:bedroom)s?',
@@ -35,11 +43,9 @@ class EntityExtractor:
     
     def extract_amenities(self, text):
         amenities = []
-        with open('data/processed/taxonomy.json', 'r') as f:
-            taxonomy = json.load(f)
-        for amenity in taxonomy.get('term', []):
-            if re.search(amenity, text, re.I):
-                amenities.append(amenity)
+        for term, pattern in self.amenity_patterns:
+            if pattern.search(text):
+                amenities.append(term)
         # if re.search(r'pool', text, re.I):
         #     amenities.append('pool')
         # if re.search(r'garage', text, re.I):
