@@ -6,6 +6,8 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import pandas as pd
 import re
+from scripts.text_cleaning import TextCleaner
+
 # nltk.download('stopwords')
 # nltk.download('punkt')
 # nltk.download('punkt_tab')
@@ -73,8 +75,13 @@ custom_stopwords = {
     "welcoming", "refined", "contemporary", "clean", "sleek", "warm",
     "airy", "lush", "scenic", "dream", "ultimate", "turnkey", "popular",
     "green", "white", "top", "right", "second", "future", "currently",
-    "nearly", "approximately", "ideally", "look", "looking","buyer", "seller", "owner", "investor", "resident", "neighbor",
-    "north", "south", "east", "west", "downtown", "village", "ha", "wa", "sf", "approx"
+    "nearly", "approximately", "ideally", "look", "looking","buyer", "seller", "owner", 
+    "investor", "resident", "neighbor", "north", "south", "east", "west", "downtown", 
+    "village", "ha", "wa", "sf", "approx", "see", "amenity", "also", "plus","bedroom", 
+    "bathroom", "bed", "bath", "bedroom bathroom",
+    "bedroom full", "bedroom bath", "full bathroom", "full bath",
+    "bed bath", "kitchen bathroom", "residence bedroom",
+    "bathroom walk-in", "bathroom dual", "bedroom primary"
 }
 
 all_stopwords = stop_words.union(custom_stopwords)
@@ -82,13 +89,8 @@ lemmatizer = WordNetLemmatizer()
 
 
 all_text = ' '.join(df['remarks'].dropna().str.lower())
-all_text = all_text.replace('\u2019', "'")   # curly apostrophe, straight
-all_text = re.sub(r'[\u2014\u2013\u2022]', ' ', all_text)  # em dash, en dash, bullet
-
-
-all_text = re.sub(r"[^a-z0-9\s\-]", ' ', all_text)
-all_text = re.sub(r'-{2,}', ' ', all_text)
-all_text = re.sub(r"\s+", " ", all_text).strip()
+cleaner = TextCleaner()
+all_text = cleaner.clean_text(all_text)
 
 tokens = nltk.word_tokenize(all_text)
 tokens = [t for t in tokens if not t.isdigit()]
@@ -109,7 +111,7 @@ for gram in ngrams(tokens, 2):
 
 # counts frequency of valid ngrams
 freq = Counter(valid_ngrams)
-absorb_ratio = 0.30
+absorb_ratio = 0.40
 final = dict(freq)
 bigrams = [t for t in freq if len(t.split()) == 2]
     
@@ -124,7 +126,7 @@ for bigram in bigrams:
 # Build taxonomy from deduped, sorted results
 taxonomy = {'terms': []}
 sorted_final = sorted(final.items(), key=lambda x: -x[1])
-for term, count in sorted_final[:500]:
+for term, count in sorted_final[:300]:
     taxonomy['terms'].append({
         'id': f"term_{len(taxonomy['terms'])}",
         'term': term,
@@ -132,6 +134,6 @@ for term, count in sorted_final[:500]:
     })
 
 with open('data/processed/taxonomy.json', 'w') as f:
-    print(f"Success — wrote {len(taxonomy['terms'])} terms")
+    # print(f"Success — wrote {len(taxonomy['terms'])} terms")
 
     json.dump(taxonomy, f, indent=2)
