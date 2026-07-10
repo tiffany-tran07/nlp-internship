@@ -20,8 +20,10 @@ class TextCleaner:
         text = self.normalize_measurements(text)
         text = self.lowercase_text(text)
         text = self.remove_html_tags(text)
-        text = self.remove_url(text)
-        text = self.remove_email(text)
+        text = self.normalize_url(text)
+        text = self.normalize_email(text)
+        text = self.normalize_brackets(text)
+        text = self.remove_punctuation(text)
         text = self.expand_abbreviations(text)
         return text.strip()
     def normalize_unicode(self, text):
@@ -61,6 +63,16 @@ class TextCleaner:
             text = re.sub(pattern, full, text, flags=re.I)
 
         return re.sub(r'\s+', ' ', text).strip()
+    
+    def normalize_brackets(self, text):
+        text = text.replace('\u2019', "'")   # curly apostrophe -> straight
+        text = re.sub(r'[\u2014\u2013\u2022]', ' ', text)
+        return text
+    
+    def remove_punctuation(self, text):
+        text = re.sub(r"[^a-z0-9\s\-]", ' ', text)
+        return re.sub(r"\s+", " ", text).strip()
+
 
     def profile_column(self, df, column_name):
         # Analyze what's actually in L_Remarks
