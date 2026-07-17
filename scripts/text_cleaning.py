@@ -70,7 +70,7 @@ class TextCleaner:
         return text
     
     def remove_punctuation(self, text):
-        text = re.sub(r"[^a-z0-9\s\-]", ' ', text)
+        text = re.sub(r"[^a-z0-9\s\-.]", ' ', text)
         return re.sub(r"\s+", " ", text).strip()
 
 
