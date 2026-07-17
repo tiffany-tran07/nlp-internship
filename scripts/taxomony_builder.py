@@ -46,7 +46,7 @@ custom_stopwords = {
     "four", "five", "six", "seven", "eight", "nine", "zero", "special", "create",
     "perfectly", "flexibility", "new"
     , "effortlessly", "generous", "expansive", "natural", "ready", ":"
-    , "situated", "convenient", "nestled", "entertainment", "seamless", "upgraded",
+    , "situated", "convenient", "nestled", "seamless", "upgraded",
     "heart", "complete", "completely", "customized", "custom-built", 
     "custom-designed", "custom-crafted", "minutes", "paint", "large", "bright",
     "remodeled", "renovated", "modernized", "refreshed", "revitalized", "\u2019", "find",
@@ -63,7 +63,8 @@ custom_stopwords = {
     "want", "need", "used", "lead", "capture", "combine",
     "complement", "complemented", "highlight", "surround", "surrounded",
     "install", "installed", "paint", "painted", "position", "positioned",
-    "connect", "connected", "enhance", "enhanced", "escape", "unwind",  "true", "truly", "best", "extra", "double", "multiple", "main",
+    "connect", "connected", "enhance", "enhanced", "escape", "unwind",  "true", "truly", 
+    "best", "extra", "double", "multiple", "main",
     "central", "local", "nearby", "adjacent", "directly", "across",
     "around", "along", "behind", "back", "front", "next", "beyond",
     "without", "every", "everything", "much", "many", "plenty", "even",
@@ -78,10 +79,7 @@ custom_stopwords = {
     "nearly", "approximately", "ideally", "look", "looking","buyer", "seller", "owner", 
     "investor", "resident", "neighbor", "north", "south", "east", "west", "downtown", 
     "village", "ha", "wa", "sf", "approx", "see", "amenity", "also", "plus","bedroom", 
-    "bathroom", "bed", "bath", "bedroom bathroom",
-    "bedroom full", "bedroom bath", "full bathroom", "full bath",
-    "bed bath", "kitchen bathroom", "residence bedroom",
-    "bathroom walk-in", "bathroom dual", "bedroom primary"
+    "bathroom", "bed"
 }
 
 all_stopwords = stop_words.union(custom_stopwords)
