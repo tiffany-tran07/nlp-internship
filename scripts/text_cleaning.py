@@ -7,7 +7,7 @@ import unicodedata
 class TextCleaner:
     def __init__(self):
         self.abbrev_map = {
-            'br': 'bedroom', 'ba': 'bathroom', 'ba': 'bath', 'br': 'bed', 'lr': 'living room', 'sqft': 'square feet', 'sq ft': 'square feet', 'sq. ft.': 'square feet', 'sq. ft': 'square feet',
+            "bath": "bathroom", "baths": "bathroom", "baths": "bathroom",'bedrooms': 'bedroom', 'bed': 'bedroom','beds': 'bedroom','br': 'bedroom', 'ba': 'bathroom', 'ba': 'bathroom', 'br': 'bedroom', 'lr': 'living room', 'sqft': 'square feet', 'sq ft': 'square feet', 'sq. ft.': 'square feet', 'sq. ft': 'square feet',
             'sf': 'square feet','w/o': 'without', 'w/': 'with', 'primary suite': 'master bedroom', 'mbr': 'master bedroom', 'condo': 'condominium', 'ft': 'feet', 'mi': 'mile', 'yd': 'yard', 
             'ac': 'air conditioning', 'a/c': 'air conditioning', 'hoa': 'homeowners association', 'th': 'townhouse', 'co-op': 'cooperative', 'coop': 'cooperative', 
             'bldg': 'building', 'flr': 'floor', 'lvl': 'level', 'apt.': 'apartment', 'apt': 'apartment', 'blvd': 'boulevard', 'ave': 'avenue', 'st': 'street','one:':'1', 
@@ -105,19 +105,19 @@ class TextCleaner:
         found_abbrevs = re.findall(abbrev_pattern, all_text)
         return list(set(found_abbrevs))
 # Use this to guide your cleaning strategy:
-cleaner = TextCleaner()
-df = pd.read_csv('data/processed/listing_sample.csv')
-profile = cleaner.profile_column(df, 'remarks')
-print("Original Remarks:")
-print(f"Null rate: {profile['null_rate']}")
-print(f"Common abbreviations: {profile['common_abbreviations']}")
-print(f"Price mentions: {profile['price_mentions']}")
-print(f"Has HTML: {profile['has_html']}")
+# cleaner = TextCleaner()
+# df = pd.read_csv('data/processed/listing_sample.csv')
+# profile = cleaner.profile_column(df, 'remarks')
+# print("Original Remarks:")
+# print(f"Null rate: {profile['null_rate']}")
+# print(f"Common abbreviations: {profile['common_abbreviations']}")
+# print(f"Price mentions: {profile['price_mentions']}")
+# print(f"Has HTML: {profile['has_html']}")
 
-df_cleaned = pd.read_csv('data/processed/cleaned_listing_sample.csv')
-cleaned_profile = cleaner.profile_column(df_cleaned, 'cleaned_remarks')
-print("\nCleaned Remarks:")
-print(f"Null rate: {cleaned_profile['null_rate']}")
-print(f"Common abbreviations: {cleaned_profile['common_abbreviations']}")
-print(f"Price mentions: {cleaned_profile['price_mentions']}")
-print(f"Has HTML: {cleaned_profile['has_html']}")
+# df_cleaned = pd.read_csv('data/processed/cleaned_listing_sample.csv')
+# cleaned_profile = cleaner.profile_column(df_cleaned, 'cleaned_remarks')
+# print("\nCleaned Remarks:")
+# print(f"Null rate: {cleaned_profile['null_rate']}")
+# print(f"Common abbreviations: {cleaned_profile['common_abbreviations']}")
+# print(f"Price mentions: {cleaned_profile['price_mentions']}")
+# print(f"Has HTML: {cleaned_profile['has_html']}")
