@@ -17,3 +17,6 @@ df["extracted_sqft"] = df["entities"].str["sqft"]
 
 df.to_csv('data/processed/extracted_test_suite.csv', index=False)
 
+# df = pd.read_csv('data/processed/suite_amenities.csv')
+# df.pop('price')
+# df.to_csv('data/processed/suite_amenities.csv')
