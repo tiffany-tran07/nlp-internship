@@ -10,3 +10,5 @@ if not valid:
 # Return helpful message to user
 else:
     sql, params = parser.to_sql(filters)
+    print(params)
+    print(sql)
