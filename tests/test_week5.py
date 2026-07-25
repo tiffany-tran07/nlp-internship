@@ -3,6 +3,15 @@ import pandas as pd
 
 searcher = SemanticSearcher()
 df = pd.read_csv('data/processed/extracted_test_suite.csv')
-remarks = df['remarks']
+remarks = df['remarks'].to_list()
+
+searcher.build_index(remarks)
+
+test_query = "a home in Irvine with 3 bedrooms and a pool"
+
+results = searcher.search(test_query)
+
+print(results)
+
 
 
