@@ -11,7 +11,8 @@ class SemanticSearcher:
         embeddings = self.model.encode(remarks_list)
         # Build FAISS index
         dim = embeddings.shape[1]
-        self.index = faiss.IndexFlatIP(dim) faiss.normalize_L2(embeddings)
+        self.index = faiss.IndexFlatIP(dim) 
+        faiss.normalize_L2(embeddings)
         self.index.add(embeddings)
         self.listings = remarks_list
     # Inner product for cosine sim
@@ -19,6 +20,5 @@ class SemanticSearcher:
         query_emb = self.model.encode([query])
         faiss.normalize_L2(query_emb)
         scores, indices = self.index.search(query_emb, top_k)
-        results = [(self.listings[i], scores[0][j]) for j, i in
-        enumerate(indices[0])]
-    return results
+        results = [(self.listings[i], scores[0][j]) for j, i in enumerate(indices[0])]
+        return results
