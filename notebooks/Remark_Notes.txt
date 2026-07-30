@@ -4,3 +4,11 @@ Remark Notes:
 - The detail of the description varies for each property
 - The number of bedrooms and bathrooms are common selling points for these properties
 - Neighborhood environment is also a common selling point
+
+Amenity Results:
+- Overall precision: 0.905
+- Overall recall: 0.953
+- Overall F1: 0.928
+- correct beds identified: 30
+- correct baths identified: 27
+- correct sqft identified: 33

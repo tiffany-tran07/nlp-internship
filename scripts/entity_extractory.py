@@ -1,5 +1,6 @@
 import re
 import json
+import math
 
 class EntityExtractor:
     def __init__(self, taxonomy_path='data/processed/taxonomy.json'):
@@ -12,13 +13,14 @@ class EntityExtractor:
         ]
     def extract_bedrooms(self, text):
         patterns = [
-            r'(\d+)\s*(?:bedroom)s?',
-            r'(\d+)bd'
+        r'(\d+(?:\.\d+)?)\s*(?:bedroom)s?',
+        r'(\d+(?:\.\d+)?)\s*bd'
         ]
         for pattern in patterns:
             match = re.search(pattern, text, re.I)
             if match:
-                return int(match.group(1))
+                value = float(match.group(1))
+                return int(math.floor(value + 0.5))
         return None
     
     def extract_bathrooms(self, text):
@@ -29,7 +31,8 @@ class EntityExtractor:
         for pattern in patterns:
             match = re.search(pattern, text, re.I)
             if match:
-                return int(match.group(1))
+                value = float(match.group(1))
+                return int(math.floor(value+0.5))
         return None
     
     def extract_price(self, text):
