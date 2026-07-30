@@ -1,4 +1,5 @@
 from rank_bm25 import BM25Okapi
+import numpy as np
 
 class KeywordSearcher:
     def __init__(self, remarks_list):
