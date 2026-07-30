@@ -8,11 +8,14 @@ def search_embeddings():
 
     searcher.build_index(remarks)
 
-    test_query = "a home in Irvine with 3 bedrooms and a pool"
+    test_query = "a home in Irvine with 3 bedrooms and a pool. Quiet town and no hoa"
 
-    results = searcher.search(test_query)
+    results = searcher.search(test_query, 5)
+    
+    for remark in results:
+        print("\n\nRemark: ", remark[0])
 
-    print(results)
+search_embeddings()
 
 
 
