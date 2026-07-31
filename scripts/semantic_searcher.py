@@ -6,7 +6,8 @@ class SemanticSearcher:
         self.model = SentenceTransformer('all-MiniLM-L6-v2')
         self.index = None
         self.listings = None
-    def build_index(self, remarks_list):
+    def build_index(self, remarks_list, ids=None):
+        self.ids = ids if ids is not None else list(range(len(remarks_list)))
         print(f"Encoding {len(remarks_list)} listings...")
         embeddings = self.model.encode(remarks_list)
         # Build FAISS index
@@ -20,5 +21,5 @@ class SemanticSearcher:
         query_emb = self.model.encode([query])
         faiss.normalize_L2(query_emb)
         scores, indices = self.index.search(query_emb, top_k)
-        results = [(self.listings[i], scores[0][j]) for j, i in enumerate(indices[0])]
+        results = [(self.ids[i], self.listings[i], scores[0][j]) for j, i in enumerate(indices[0])]
         return results
