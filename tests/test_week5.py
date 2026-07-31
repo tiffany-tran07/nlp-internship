@@ -3,10 +3,15 @@ from scripts.keyword_search import KeywordSearcher
 import pandas as pd
 import time
 import faiss
+import random
+
 
 
 searcher = SemanticSearcher()
 df = pd.read_csv('data/processed/extracted_test_suite.csv')
+# Quick way to scale test data if you don't have 10k real listings
+base_remarks = df['remarks'].dropna().tolist()
+synthetic_remarks = [random.choice(base_remarks) for _ in range(10000)]
 remarks = df['remarks'].to_list()
 
 def search_embeddings(searcher, queries):
@@ -77,17 +82,18 @@ for q in remarks:
 
 print("Indexing time:")
 start = time.perf_counter()
-searcher.build_index(remarks)
+searcher.build_index(synthetic_remarks)
 print(f"  semantic build_index: {time.perf_counter() - start:.2f}s")
 
 start = time.perf_counter()
 print(f"  keyword build_index:  {time.perf_counter() - start:.2f}s")
 
 print("\nSemantic search latency:")
-benchmark_search(searcher, remarks)
+benchmark_search(searcher, synthetic_remarks)
 
 print("\nKeyword search latency:")
-benchmark_search(kw_searcher, remarks)
+benchmark_search(kw_searcher, synthetic_remarks)
+
 
 # start = time.perf_counter()
 # query_emb = searcher.model.encode(remarks)
