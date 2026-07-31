@@ -31,3 +31,14 @@ Latency:
     mean: 1.99ms
     p50:  1.56ms
     p95:  4.11ms
+
+Semantic vs Keyword:
+    Semantic search underperforms keyword search on this query set (p@1: 0.26 vs 0.58) 
+    primarily because the queries encode precise numeric and categorical constraints 
+    (bed count, price threshold, city) rather than open-ended conceptual intent. ~49% 
+    of semantic search's errors stem from failing to distinguish numeric attribute 
+    mismatches (price, bed count) that keyword matching — while imperfect — handles 
+    somewhat better via exact term overlap. This suggests a hybrid architecture: apply
+    structured metadata filters for discrete constraints (bed/bath/price/city) before 
+    or alongside semantic ranking, reserving embedding-based search for genuinely 
+    unstructured, descriptive intent (e.g., "cozy," "great for entertaining," "close-knit neighborhood feel") that resists exact filtering.
