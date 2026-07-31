@@ -2,7 +2,6 @@ from scripts.semantic_searcher import SemanticSearcher
 from scripts.keyword_search import KeywordSearcher
 import pandas as pd
 import time
-import faiss
 import random
 
 
