@@ -12,3 +12,22 @@ Amenity Results:
 - correct beds identified: 30
 - correct baths identified: 27
 - correct sqft identified: 33
+
+Latency:
+- Indexing 10k listings takes ~70s (one-time/batch cost) 
+- query latency is well under the 100ms threshold at ~18ms average.
+
+    Encoding 10000 listings...
+    f  semantic build_index: 70.09s
+    keyword build_index:  0.00s
+
+    Semantic search latency:
+    mean: 17.63ms
+    p50:  17.58ms
+    p95:  22.29ms
+    p99:  23.71ms
+
+    Keyword search latency:
+    mean: 1.99ms
+    p50:  1.56ms
+    p95:  4.11ms
