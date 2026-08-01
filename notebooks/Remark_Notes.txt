@@ -1,3 +1,5 @@
+** need to deal w/ entity extractor's negation
+
 Remark Notes:
 - Contain detailed descriptions of the housing units
 - All notes are meant to "sell" the house to the buyer, so downsides are never mentioned
