@@ -1,13 +1,3 @@
-"""Lightweight NLP classifier for real-estate search query intent.
-
-Intent labels:
-- browsing
-- researching
-- high_intent_inquiry
-
-This module uses TF-IDF features plus logistic regression. It classifies intent
-from query wording only; it does not use behavioral or CRM conversion signals.
-"""
 
 from __future__ import annotations
 
