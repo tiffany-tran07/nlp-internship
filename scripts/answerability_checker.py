@@ -1,3 +1,4 @@
+from scripts.query_parser import QueryParser
 class AnswerabilityChecker:
     def __init__(self, taxonomy, schema_validator):
         self.taxonomy = taxonomy
@@ -14,6 +15,7 @@ class AnswerabilityChecker:
             return False, "This doesn't appear to be a real estate question"
         # Check 2: Does query reference valid data?
         # (Use Week 4's schema validator)
+        parser = QueryParser()
         filters = parser.parse(query)
         valid, errors = self.validator.validate_query(filters)
         if not valid:
@@ -27,13 +29,3 @@ class AnswerabilityChecker:
         if results_df.isnull().all().all():
             return False, "Query returned no meaningful data"
         return True, "Results found"
-# Usage:
-checker = AnswerabilityChecker(taxonomy, validator)
-can_answer, message = checker.check_pre_query(user_query)
-if not can_answer:
-    return {"error": message, "answerable": False}
-# Execute query...
-results = execute_query(sql)
-can_answer, message = checker.check_post_query(user_query, results)
-if not can_answer:
-    return {"message": message, "results": []}
