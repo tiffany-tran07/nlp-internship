@@ -5,10 +5,13 @@ from dataclasses import dataclass
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 import numpy as np
+import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
+
+from scripts.query_parser import QueryParser
 
 
 VALID_LABELS = (
@@ -207,34 +210,51 @@ class QueryIntentClassifier:
 
 
 if __name__ == "__main__":
-    demo_queries = [
-        "show me homes in San Diego",
-        "luxury homes in Beverly Hills",
-        "homes with pools in Irvine",
-        "condos near UC Irvine with low HOA",
-        "areas in San Diego with low property taxes",
-        "best neighborhoods in Irvine for families",
-        "move-in ready homes in San Diego under 1.2m",
-        "homes available this weekend with open houses",
-        "new listings in Irvine under 900k with seller financing",
-    ]
-    demo_labels = [
-        "browsing",
-        "browsing",
-        "browsing",
-        "researching",
-        "researching",
-        "researching",
-        "high_intent_inquiry",
-        "high_intent_inquiry",
-        "high_intent_inquiry",
-    ]
+    # demo_queries = [
+    #     "show me homes in San Diego",
+    #     "luxury homes in Beverly Hills",
+    #     "homes with pools in Irvine",
+    #     "condos near UC Irvine with low HOA",
+    #     "areas in San Diego with low property taxes",
+    #     "best neighborhoods in Irvine for families",
+    #     "move-in ready homes in San Diego under 1.2m",
+    #     "homes available this weekend with open houses",
+    #     "new listings in Irvine under 900k with seller financing",
+    # ]
+    # demo_labels = [
+    #     "browsing",
+    #     "browsing",
+    #     "browsing",
+    #     "researching",
+    #     "researching",
+    #     "researching",
+    #     "high_intent_inquiry",
+    #     "high_intent_inquiry",
+    #     "high_intent_inquiry",
+    # ]
 
+    query_set = pd.read_csv("data/processed/california_homebuyer_queries.csv")
+    train_df, test_df = train_test_split(
+        query_set,
+        test_size=0.2,
+        random_state=42,
+        stratify=query_set["category"]
+    )
     classifier = QueryIntentClassifier(confidence_threshold=0.55)
-    classifier.train(demo_queries, demo_labels)
+    classifier.train(train_df["query"].tolist(), train_df["category"].tolist())
 
-    result = classifier.predict_detailed("homes with open houses this weekend")
-    print("Intent:", result.intent)
-    print("Confidence:", round(result.confidence, 3))
-    print("Uncertain:", result.uncertain)
-    print("Probabilities:", result.probabilities)
+    # result = classifier.predict_detailed("homes with open houses this weekend")
+    # print("Intent:", result.intent)
+    # print("Confidence:", round(result.confidence, 3))
+    # print("Uncertain:", result.uncertain)
+    # print("Probabilities:", result.probabilities)
+
+    y_true = test_df["category"].tolist()
+
+    y_pred = [
+        classifier.predict_detailed(query).intent
+        for query in test_df["query"]
+    ]
+
+    print(classification_report(y_true, y_pred))
+    print(confusion_matrix(y_true, y_pred))
