@@ -1,0 +1,183 @@
+TEAM REFERENCE GUIDE
+
+========================================================================
+FAIR HOUSING RULES
+FOR LISTINGS, SEARCH, AND AI SYSTEMS
+========================================================================
+
+A practical guide for product, engineering, operations, support, sales, and content teams
+
+Core principle: Housing decisions, advertising, steering, and search experiences must not express or implement a preference, limitation, or discrimination based on a protected characteristic.
+
+Scope
+
+This guide summarizes the federal Fair Housing Act and related federal guidance for day-to-day product and operational decisions. State and local laws may protect additional classes or impose stricter rules.
+
+Important: This document is operational guidance, not legal advice. Escalate uncertain, novel, or jurisdiction-specific situations to qualified counsel or your compliance lead.
+
+Use this guide to:
+
+- review housing listings and marketing copy before publication;
+- handle user search queries that request discriminatory filtering or steering;
+- design rules, classifiers, datasets, and human-review workflows;
+- recognize accessibility and accommodation issues; and
+- document and escalate suspected violations consistently.
+
+1. FEDERAL PROTECTED CLASSES
+----------------------------
+
+The federal Fair Housing Act prohibits housing discrimination because of race, color, national origin, religion, sex, familial status, or disability. DOJ describes these seven bases as applying to housing providers and other entities whose practices make housing unavailable. [1]
+
+Protected basis | Operational meaning                                                                           | Examples of risk signals
+----------------+-----------------------------------------------------------------------------------------------+---------------------------------------------------------------
+Race / color    | Actual or perceived race, skin color, or racialized identity                                  | Racial neighborhood descriptions; exclusion; steering
+National origin | Birthplace, ancestry, ethnicity, or perceived origin                                          | Avoiding immigrants; language or country-of-origin proxies
+Religion        | Religious belief, affiliation, or nonbelief                                                   | “Christian community”; excluding Muslims; religious preference
+Sex             | Discrimination because of sex; sexual harassment is also prohibited                           | Men only; women preferred; sex-based terms or conditions
+Familial status | Families with children under 18, including pregnancy and certain custodial situations         | Adults only; no children; steering families to one area
+Disability      | Covered physical or mental impairments, record of impairment, or being regarded as having one | Rejecting wheelchair users; refusing reasonable accommodation
+
+Sexual orientation and gender identity: HUD has interpreted and enforced federal sex-discrimination protections in housing in this area, and HUD-funded programs are also subject to Equal Access requirements. Because policy and litigation can evolve, route edge cases to counsel and follow current organizational policy. State and local coverage may be broader.
+
+Additional protections
+
+Many jurisdictions also protect age, source of income, marital status, military status, immigration status, genetic information, or other characteristics. Product rules should be configurable by jurisdiction rather than treating the federal list as exhaustive.
+
+2. WHAT THE LAW GENERALLY PROHIBITS
+-----------------------------------
+
+- Refusing to rent, sell, negotiate, or otherwise make housing unavailable because of a protected characteristic.
+- Applying different prices, deposits, qualifications, services, facilities, rules, or terms.
+- Providing false information about availability or steering people toward or away from areas or properties.
+- Publishing or causing publication of housing notices, statements, or advertisements that indicate a protected-class preference, limitation, or discrimination.
+- Retaliating against a person for exercising fair-housing rights or assisting someone else.
+- Failing to provide legally required reasonable accommodations or modifications related to disability.
+
+3. ADVERTISING AND LISTING LANGUAGE
+-----------------------------------
+
+Review the message a reasonable reader would take from the entire statement—not merely whether it contains a particular keyword. A factual mention can be benign, while a seemingly positive phrase can still communicate an unlawful preference.
+
+Avoid / flag                                | Usually safer description                                                                | Why
+--------------------------------------------+------------------------------------------------------------------------------------------+--------------------------------------------------------------
+“No children” / “adults only”               | Describe bedrooms, floor plan, lawful occupancy limit, or verified senior-housing status | May exclude based on familial status
+“Perfect for singles” / “ideal for couples” | “One-bedroom unit with 650 sq. ft.”                                                      | Expresses household-composition preference
+“Christian neighborhood” / “Jewish area”    | Give objective distances to named destinations if genuinely relevant                     | Characterizes preferred residents or neighborhood composition
+“Safe neighborhood” / “good area”           | Provide objective, sourced information or neutral location facts                         | Subjective language can act as a proxy and may mislead
+“No wheelchairs” / “able-bodied only”       | Describe physical features accurately: steps, elevator, door width, accessible route     | Direct disability exclusion
+“Family-friendly” as audience targeting     | Describe the specific amenity: playground, fenced yard, nearby park                      | Avoid targeting or discouraging households
+
+Context-sensitive examples
+
+- “Converted church loft” may describe architecture; it does not necessarily express a religious preference.
+- “Church 0.4 miles away” may be an objective location fact; selectively highlighting religious facilities can still create risk depending on context and targeting.
+- “Wheelchair-accessible entrance” describes an accessibility feature and should not be blocked merely because it references disability.
+- “Maximum occupancy: four, subject to applicable law” can be neutral if based on a valid, consistently applied standard.
+Do not use keyword bans alone: A reliable system evaluates both protected-class content and discriminatory intent, while preserving legitimate accessibility, location, architecture, and support-related language.
+
+4. SEARCH, RECOMMENDATION, AND AI BEHAVIOR
+------------------------------------------
+
+A search or recommendation system can create fair-housing risk if it honors discriminatory requests, uses protected-class proxies, or steers users based on neighborhood demographics. HUD issued 2024 guidance addressing Fair Housing Act risks in advertising through digital platforms. [4]
+
+User request                                         | System response
+-----------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------
+“Show neighborhoods where mostly white people live.” | Do not filter or steer by race. Offer neutral criteria such as price, commute, size, and amenities.
+“Find apartments near my mosque.”                    | A neutral distance-based search may be allowed if applied consistently and not used to infer or target resident composition.
+“Avoid buildings with families.”                     | Decline the discriminatory criterion; continue with lawful property attributes.
+“Show wheelchair-accessible apartments.”             | Support the accessibility request and return objective accessibility features.
+
+Recommended product behavior
+
+- Block or neutralize explicit requests to include, exclude, rank, or steer based on protected characteristics.
+- Offer lawful alternatives: budget, bedrooms, commute time, verified amenities, accessibility features, and objective property attributes.
+- Do not infer protected traits from names, language, affiliations, location history, behavior, or other proxies for housing decisions.
+- Log the triggering text, model/rule version, action taken, and reviewer outcome with appropriate privacy controls.
+- Route uncertain cases to trained human reviewers; do not label a person or listing as unlawful solely from an automated score.
+
+5. DISABILITY: ACCOMMODATIONS, MODIFICATIONS, AND ACCESSIBILITY
+---------------------------------------------------------------
+
+The Fair Housing Act includes disability-specific duties. HUD and DOJ explain that reasonable accommodations are changes to rules, policies, practices, or services that may be necessary for equal opportunity to use and enjoy housing. Reasonableness is assessed case by case. [3]
+
+Concept                  | Plain-language meaning                                    | Example
+-------------------------+-----------------------------------------------------------+-------------------------------------------------------------------
+Reasonable accommodation | Change to a rule, policy, practice, or service            | Exception to a no-pets rule for an assistance animal
+Reasonable modification  | Physical change to a dwelling or common area              | Ramp, grab bars, or altered hardware, subject to applicable rules
+Accessible design        | Required features for certain covered multifamily housing | Accessible route, usable doors, switches, kitchens, and bathrooms
+Direct threat            | Requires an individualized, evidence-based assessment     | Do not rely on stereotypes or generalized fears about a disability
+
+Operational rule: Never convert an accessibility request into a negative risk signal. Distinguish requests for access or accommodation from language that excludes people with disabilities.
+
+6. FAMILIAL STATUS AND HOUSING FOR OLDER PERSONS
+------------------------------------------------
+
+Familial-status protection generally covers families with children under 18 and includes pregnancy and specified custody situations. DOJ notes that providers generally may not refuse families with children, impose special conditions, segregate families within a property, or apply unreasonable occupancy restrictions. Qualifying housing for older persons may be exempt from familial-status provisions if statutory and regulatory requirements are satisfied. [1]
+
+- Do not assume that calling a property “55+” makes an adults-only restriction lawful.
+- Verify and document eligibility under applicable Housing for Older Persons requirements before using age-restrictive language.
+- Apply lawful occupancy standards consistently; do not use them as a pretext to exclude families with children.
+
+7. TEAM DECISION WORKFLOW
+-------------------------
+
+1. Identify the housing action: listing, advertisement, search, recommendation, screening, pricing, service, or accommodation.
+2. Identify any protected-class term, proxy, or inferred characteristic.
+3. Determine intent and effect: inclusion/exclusion, preference, limitation, steering, different treatment, or a neutral factual description.
+4. Check for legitimate context: accessibility, objective location, architecture, lawful occupancy, or verified older-persons housing.
+5. Choose the response: allow, allow with edit, decline/neutralize, or escalate.
+6. Document the basis, applicable rule version, evidence, and reviewer decision.
+Escalate immediately: Novel targeting logic, demographic data use, accommodation denials, systemic false positives/negatives, retaliation allegations, complaints from regulators or users, and any issue involving state/local requirements.
+
+8. GUIDANCE FOR COMPLIANCE-CHECKER DEVELOPMENT
+----------------------------------------------
+
+Treat automated checks as risk triage—not legal determinations. The model should detect discriminatory intent while allowing legitimate protected-class references.
+
+- Use a hybrid design: explicit rules for high-confidence exclusions, an intent classifier for paraphrases, category detection, and human review for ambiguity.
+- Train on paired examples that share identity terms but differ in intent, such as “housing near my church” versus “Christian tenants only.”
+- Separate listing-language evaluation from user-query evaluation; they are different tasks with different syntax.
+- Measure precision, recall, false-positive rate, and per-category recall—not accuracy alone.
+- Keep paraphrase families out of multiple data splits to reduce leakage.
+- Version datasets, rules, thresholds, policy interpretations, and reviewer guidance.
+- Audit performance across categories and linguistic variants, including euphemisms, misspellings, negation, and multiple violations.
+Outcome            | Meaning                                                     | Recommended action
+-------------------+-------------------------------------------------------------+------------------------------------------------
+Allow              | Neutral or legitimate request                               | Proceed; retain normal monitoring
+Review             | Ambiguous context or moderate model confidence              | Queue for trained human review
+Block / neutralize | Explicit protected-class exclusion, preference, or steering | Decline criterion and offer lawful alternatives
+Escalate           | Novel, systemic, high-impact, or legally uncertain          | Send to compliance/legal with evidence
+
+9. INCIDENT RESPONSE AND RECORDKEEPING
+--------------------------------------
+
+- Preserve the original text, output, timestamp, rule/model version, and relevant configuration.
+- Stop or limit the affected behavior when there is credible risk of ongoing discriminatory treatment.
+- Notify the designated compliance, legal, privacy, and product owners according to severity.
+- Correct affected content or logic, test the fix against regression cases, and document approval.
+- Avoid retaliatory treatment of anyone who raises a fair-housing concern.
+
+10. QUICK REVIEW CHECKLIST
+--------------------------
+
+- ☐ Does the content express who should or should not live somewhere?
+- ☐ Does it describe neighborhood demographics or a preferred community identity?
+- ☐ Does it treat applicants differently or steer them based on a protected class or proxy?
+- ☐ Is a protected-class reference actually a legitimate accessibility, support, architecture, or neutral location statement?
+- ☐ Are occupancy or older-persons claims verified and consistently applied?
+- ☐ Could state or local law add another protected class?
+- ☐ Would a reasonable reader interpret the message as a preference, limitation, or exclusion?
+- ☐ Is human review needed before publishing, responding, or taking action?
+
+OFFICIAL SOURCES
+----------------
+
+- [1] U.S. Department of Justice — The Fair Housing Act — https://www.justice.gov/crt/fair-housing-act-1
+- [2] HUD — Fair Housing: Rights and Obligations — https://www.hud.gov/stat/fheo/rights-obligations
+- [3] HUD/DOJ — Joint Statement on Reasonable Accommodations under the Fair Housing Act — https://www.hud.gov/sites/documents/huddojstatement.pdf
+- [4] HUD — Guidance on Advertising Housing and Real Estate-Related Transactions Through Digital Platforms — https://archives.hud.gov/news/2024/FHEO_Guidance_on_Advertising_through_Digital_Platforms.pdf
+- [5] HUD — Report Housing Discrimination — https://www.hud.gov/reporthousingdiscrimination
+
+Document controls
+
+Owner: Compliance / Legal • Review cadence: at least annually and after material legal, policy, or product changes • Version: 1.0 • Last updated: August 2026
