@@ -228,7 +228,7 @@ def evaluate_listings(
     errors = []
 
     for item in dataset:
-        result = checker.check(item["text"], 'query')
+        result = checker.check(item["text"], 'listing')
 
         expected_compliant = parse_bool(item["expected_compliant"])
         expected_flag = not expected_compliant
