@@ -7,21 +7,21 @@ from scripts.compliance_checker import ComplianceChecker
 
 
 def test_explicit_exclusion():
-    result = ComplianceChecker().check_query(
+    result = ComplianceChecker().check_listing(
         "Quiet apartment. No kids allowed."
     )
     assert result["compliant"] is False
 
 
 def test_institution_is_not_automatically_a_violation():
-    result = ComplianceChecker().check_query(
+    result = ComplianceChecker().check_listing(
         "Converted church loft with original stonework."
     )
     assert result["requires_review"] is False
 
 
 def test_household_preference_requires_review():
-    result = ComplianceChecker().check_query(
+    result = ComplianceChecker().check_listing(
         "This unit is ideal for couples."
     )
     assert result["compliant"] is True
@@ -29,7 +29,7 @@ def test_household_preference_requires_review():
 
 
 def test_does_not_match_inside_another_word():
-    result = ComplianceChecker().check_query(
+    result = ComplianceChecker().check_listing(
         "The property has a blacktop driveway."
     )
     assert result["requires_review"] is False
