@@ -52,6 +52,7 @@ def classifier(training_data):
 
 def test_predict_returns_valid_label_and_confidence(classifier):
     intent, confidence = classifier.predict("homes with pools in San Diego")
+    print(f"Predicted intent: {intent}, confidence: {confidence}")
     assert intent in VALID_LABELS
     assert 0.0 <= confidence <= 1.0
 
@@ -125,3 +126,9 @@ def test_invalid_training_label_raises():
             ["homes in Irvine", "compare taxes"],
             ["browsing", "unknown_label"],
         )
+
+# if __name__ == "__main__":
+#     data = training_data()
+#     classifier_i = classifier(data)
+#     test_confidence = test_predict_returns_valid_label_and_confidence(classifier_i)
+
