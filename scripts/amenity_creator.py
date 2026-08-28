@@ -1,5 +1,5 @@
 import pandas as pd
-from scripts.entity_extractory import EntityExtractor
+from scripts.entity_extractor import EntityExtractor
 from scripts.text_cleaning import TextCleaner
 
 df = pd.read_csv('data/processed/test_suite.csv')

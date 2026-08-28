@@ -1,5 +1,5 @@
 from scripts.signal_extractor import SignalExtractor
-from scripts.entity_extractory import EntityExtractor
+from scripts.entity_extractor import EntityExtractor
 import json
 import pandas as pd
 

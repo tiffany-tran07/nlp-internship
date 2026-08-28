@@ -1,4 +1,4 @@
-from scripts.query_parser import QueryParser
+from scripts.query_parser import QueryParser 
 class AnswerabilityChecker:
     def __init__(self, taxonomy, schema_validator):
         self.taxonomy = taxonomy

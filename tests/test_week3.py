@@ -1,40 +1,208 @@
 import pandas as pd
-from scripts.entity_extractory import EntityExtractor
 
-def test_extract_bedrooms():
-    extractor = EntityExtractor()
-    assert extractor.extract_bedrooms("3 bedroom, 2 bathroom") == 3
-    assert extractor.extract_bedrooms("2 bedroom apartment") == 2
-    assert extractor.extract_bedrooms("No bedrooms mentioned") is None
-    print(f"✓ Bedroom extraction passed")
+from scripts.entity_extractor import EntityExtractor
 
-def test_extract_price():
-    extractor = EntityExtractor()
-    assert extractor.extract_price("$450000") == 450000
-    assert extractor.extract_price("Price: 1200000") == 1200000
-    assert extractor.extract_price("No price mentioned") is None
-    print(f"✓ Price extraction passed")
 
-def test_extract_amenities():
-    extractor = EntityExtractor()
-    # assert extractor.extract_amenities("Apartment with pool and garage") == ['pool', 'garage']
-    tester = extractor.extract_amenities("Apartment with pool and garage")
-    # print(tester)
-    assert extractor.extract_amenities("No amenities mentioned") == []
-    print(f"✓ Amenity extraction passed")
+def parse_terms(value):
+    if pd.isna(value):
+        return set()
 
-def test_extract_all():
-    extractor = EntityExtractor()
-    text = "3 bedrooms, 2 bathrooms, $450000, with pool and garage"
-    result = extractor.extract_all(text)
-    assert result['bedrooms'] == 3
-    assert result['bathrooms'] == 2
-    assert result['price'] == 450000
-    assert 'pool' in result['amenities']
-    assert 'garage' in result['amenities']
-    print(f"✓ Full extraction passed")
+    return {
+        term.strip().lower()
+        for term in str(value).split(";")
+        if term.strip()
+    }
 
-test_extract_bedrooms()
-test_extract_price()
-test_extract_amenities()
-test_extract_all()
+
+def flatten_entities(entities):
+    terms = []
+
+    for category_terms in entities.values():
+        terms.extend(category_terms)
+
+    return terms
+
+def price_matches(true_price, pred_price, tolerance=0.01):
+    if pd.isna(true_price) or pd.isna(pred_price):
+        return False
+
+    difference = abs(true_price - pred_price)
+
+    return difference <= true_price * tolerance
+
+
+def calculate_metrics(tp, fp, fn):
+    precision = tp / (tp + fp) if (tp + fp) else 0
+    recall = tp / (tp + fn) if (tp + fn) else 0
+
+    f1 = (
+        2 * precision * recall / (precision + recall)
+        if (precision + recall)
+        else 0
+    )
+
+    return precision, recall, f1
+
+
+extractor = EntityExtractor()
+
+listings = pd.read_csv(
+    "data/processed/listings_entity_gold.csv"
+)
+
+results = []
+
+
+for _, row in listings.iterrows():
+
+    extracted = extractor.extract_all(
+        row["remarks"]
+    )
+
+    all_taxonomy_entities = flatten_entities(
+        extracted["entities"]
+    )
+
+    results.append({
+        "listing_id": row["listing_id"],
+
+        "true_bed": row["bed"],
+        "pred_bed": extracted["bedrooms"],
+
+        "true_bath": row["bath"],
+        "pred_bath": extracted["bathrooms"],
+
+        "true_price": row["price"],
+        "pred_price": extracted["price"],
+
+        "true_amenities": row["amenities"],
+
+        # Compare against all taxonomy features because
+        # your old amenities column is broader than the
+        # new taxonomy's "amenities" category.
+        "pred_entities": ";".join(
+            all_taxonomy_entities
+        )
+    })
+
+
+eval_df = pd.DataFrame(results)
+
+
+# -------------------------
+# NUMERIC ENTITY ACCURACY
+# -------------------------
+
+eval_df["bed_correct"] = (
+    eval_df["true_bed"]
+    == eval_df["pred_bed"]
+)
+
+eval_df["bath_correct"] = (
+    eval_df["true_bath"]
+    == eval_df["pred_bath"]
+)
+
+eval_df["price_correct"] = eval_df.apply(
+    lambda row: price_matches(
+        row["true_price"],
+        row["pred_price"]
+    ),
+    axis=1
+)
+
+
+bed_accuracy = eval_df["bed_correct"].mean()
+bath_accuracy = eval_df["bath_correct"].mean()
+price_accuracy = eval_df["price_correct"].mean()
+
+
+print("NUMERIC ENTITY ACCURACY")
+print("-----------------------")
+
+print(
+    f"Bedroom accuracy:  {bed_accuracy:.3f}"
+)
+
+print(
+    f"Bathroom accuracy: {bath_accuracy:.3f}"
+)
+
+print(
+    f"Price accuracy:    {price_accuracy:.3f}"
+)
+
+
+# -------------------------
+# TAXONOMY ENTITY F1
+# -------------------------
+
+tp = 0
+fp = 0
+fn = 0
+
+
+for _, row in eval_df.iterrows():
+
+    gold = parse_terms(
+        row["true_amenities"]
+    )
+
+    predicted = parse_terms(
+        row["pred_entities"]
+    )
+
+    tp += len(
+        gold & predicted
+    )
+
+    fp += len(
+        predicted - gold
+    )
+
+    fn += len(
+        gold - predicted
+    )
+
+
+precision, recall, f1 = calculate_metrics(
+    tp,
+    fp,
+    fn
+)
+
+
+print("\nTAXONOMY ENTITY EVALUATION")
+print("--------------------------")
+
+print(f"True positives:  {tp}")
+print(f"False positives: {fp}")
+print(f"False negatives: {fn}")
+
+print(f"Precision: {precision:.3f}")
+print(f"Recall:    {recall:.3f}")
+print(f"F1:        {f1:.3f}")
+
+
+if f1 >= 0.85:
+    print("\n✓ Target met: F1 >= 0.85")
+else:
+    print(
+        f"\n✗ Target not met: "
+        f"F1 = {f1:.3f}"
+    )
+
+
+# -------------------------
+# SAVE RESULTS
+# -------------------------
+
+eval_df.to_csv(
+    "data/processed/entity_eval_results.csv",
+    index=False
+)
+
+print(
+    "\nSaved results to "
+    "data/processed/entity_eval_results.csv"
+)
