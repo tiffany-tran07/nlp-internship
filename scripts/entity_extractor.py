@@ -1,76 +1,173 @@
+# scripts/entity_extractor.py
+
 import json
 import math
 import re
 
-from scripts.text_cleaning import TextCleaner
-
 
 class EntityExtractor:
+    """
+    Extract structured entities and taxonomy concepts from text.
+
+    IMPORTANT:
+    This class does NOT clean text.
+
+    The caller is responsible for passing cleaned text when needed.
+
+    extract_all() accepts:
+        raw_text:
+            Original listing remarks.
+            Used mainly for price extraction.
+
+        cleaned_text:
+            Text already processed by TextCleaner.
+            Used for bedrooms, bathrooms, sqft, and taxonomy matching.
+
+    Example:
+
+        cleaner = TextCleaner()
+        extractor = EntityExtractor()
+
+        raw = listing["L_Remarks"]
+        cleaned = cleaner.clean_text(raw)
+
+        result = extractor.extract_all(
+            raw_text=raw,
+            cleaned_text=cleaned
+        )
+    """
 
     def __init__(
         self,
-        taxonomy_path="data/processed/taxonomy.json"
+        taxonomy_path="data/processed/taxonomy.json",
     ):
-        """
-        Load the taxonomy and precompile regex patterns.
-
-        Each canonical taxonomy term may also contain aliases.
-
-        Example:
-        {
-            "term": "solar",
-            "aliases": [
-                "solar panel",
-                "solar panels"
-            ]
-        }
-
-        If an alias matches, the extractor returns the
-        canonical term ("solar").
-        """
-
-        self.cleaner = TextCleaner()
-
-        with open(taxonomy_path, "r") as f:
+        with open(
+            taxonomy_path,
+            "r",
+            encoding="utf-8",
+        ) as f:
             taxonomy = json.load(f)
+
+        if "categories" not in taxonomy:
+            raise ValueError(
+                "taxonomy must contain a 'categories' object"
+            )
 
         self.entity_patterns = {}
 
-        # --------------------------------
-        # BUILD TAXONOMY REGEX PATTERNS
-        # --------------------------------
+        self._build_taxonomy_patterns(
+            taxonomy
+        )
 
-        for category, terms in taxonomy.get(
-            "categories",
-            {}
-        ).items():
+    # =========================================================
+    # NORMALIZATION
+    # =========================================================
 
-            self.entity_patterns[category] = []
+    @staticmethod
+    def _normalize_taxonomy_term(term):
+        """
+        Minimal normalization for taxonomy patterns.
+
+        This is NOT general text cleaning.
+
+        It only:
+            - converts to lowercase
+            - normalizes whitespace
+
+        TextCleaner remains responsible for cleaning remarks.
+        """
+        return " ".join(
+            str(term)
+            .strip()
+            .lower()
+            .split()
+        )
+
+    # =========================================================
+    # TAXONOMY PATTERNS
+    # =========================================================
+
+    def _build_taxonomy_patterns(
+        self,
+        taxonomy,
+    ):
+        """
+        Build regex patterns from canonical taxonomy terms
+        and aliases.
+
+        Alias matches return canonical terms.
+        """
+
+        for category, terms in (
+            taxonomy.get(
+                "categories",
+                {}
+            ).items()
+        ):
+            self.entity_patterns[
+                category
+            ] = []
 
             for term_obj in terms:
 
-                original_term = term_obj["term"]
+                if not isinstance(
+                    term_obj,
+                    dict,
+                ):
+                    continue
 
-                # Canonical term + aliases
+                original_term = (
+                    term_obj.get(
+                        "term"
+                    )
+                )
+
+                if not isinstance(
+                    original_term,
+                    str,
+                ):
+                    continue
+
+                canonical = (
+                    self._normalize_taxonomy_term(
+                        original_term
+                    )
+                )
+
+                if not canonical:
+                    continue
+
                 variants = [
                     original_term
                 ]
 
-                variants.extend(
+                aliases = (
                     term_obj.get(
                         "aliases",
                         []
                     )
                 )
 
+                if isinstance(
+                    aliases,
+                    list,
+                ):
+                    variants.extend(
+                        aliases
+                    )
+
                 compiled_patterns = []
 
                 for variant in variants:
 
-                    # Normalize taxonomy term using
-                    # the same cleaner used on remarks.
+                    if not isinstance(
+                        variant,
+                        str,
+                    ):
+                        continue
+
                     normalized_variant = (
-                        self.cleaner.clean_text(
+                        self._normalize_taxonomy_term(
                             variant
                         )
                     )
@@ -78,49 +175,79 @@ class EntityExtractor:
                     if not normalized_variant:
                         continue
 
-                    pattern = re.compile(
-                        r"\b"
-                        + re.escape(
-                            normalized_variant
+                    # Treat spaces and hyphens similarly.
+                    parts = re.split(
+                        r"[\s\-]+",
+                        normalized_variant,
+                    )
+
+                    escaped_parts = [
+                        re.escape(part)
+                        for part in parts
+                        if part
+                    ]
+
+                    if not escaped_parts:
+                        continue
+
+                    flexible_variant = (
+                        r"[\s\-]+".join(
+                            escaped_parts
                         )
-                        + r"\b",
-                        re.I
+                    )
+
+                    pattern = re.compile(
+                        rf"(?<!\w)"
+                        rf"{flexible_variant}"
+                        rf"(?!\w)",
+                        re.IGNORECASE,
                     )
 
                     compiled_patterns.append(
                         pattern
                     )
 
-                self.entity_patterns[
-                    category
-                ].append(
-                    (
-                        original_term,
-                        compiled_patterns
-                    )
-                )
+                if compiled_patterns:
 
-    # ====================================
+                    self.entity_patterns[
+                        category
+                    ].append(
+                        (
+                            canonical,
+                            compiled_patterns,
+                        )
+                    )
+
+    # =========================================================
     # BEDROOM EXTRACTION
-    # ====================================
+    # =========================================================
 
-    def extract_bedrooms(self, text):
+    def extract_bedrooms(
+        self,
+        text,
+    ):
         """
-        Extract number of bedrooms.
+        Extract bedroom count from CLEANED text.
 
-        Examples:
+        Examples after TextCleaner:
             3 bedroom
-            3 bedrooms
-            3 bd
-            3 beds
-            3 br
+            4 bedroom
         """
 
+        if not text:
+            return None
+
+        text = str(text)
+
         patterns = [
-            r"(\d+(?:\.\d+)?)\s*bedrooms?",
-            r"(\d+(?:\.\d+)?)\s*bd\b",
-            r"(\d+(?:\.\d+)?)\s*beds?\b",
-            r"(\d+(?:\.\d+)?)\s*br\b"
+            r"\b(\d+(?:\.\d+)?)\s*bedroom\b",
+            r"\b(\d+(?:\.\d+)?)\s*bedrooms\b",
+
+            # Keep these for robustness if caller supplies
+            # only partially cleaned text.
+            r"\b(\d+(?:\.\d+)?)\s*bd\b",
+            r"\b(\d+(?:\.\d+)?)\s*beds?\b",
+            r"\b(\d+(?:\.\d+)?)\s*br\b",
         ]
 
         for pattern in patterns:
@@ -128,7 +255,7 @@ class EntityExtractor:
             match = re.search(
                 pattern,
                 text,
-                re.I
+                re.IGNORECASE,
             )
 
             if match:
@@ -137,8 +264,6 @@ class EntityExtractor:
                     match.group(1)
                 )
 
-                # Round using the same convention
-                # as the comparison dataset.
                 return int(
                     math.floor(
                         value + 0.5
@@ -147,28 +272,36 @@ class EntityExtractor:
 
         return None
 
-    # ====================================
+    # =========================================================
     # BATHROOM EXTRACTION
-    # ====================================
+    # =========================================================
 
-    def extract_bathrooms(self, text):
+    def extract_bathrooms(
+        self,
+        text,
+    ):
         """
-        Extract number of bathrooms.
+        Extract bathroom count.
 
-        The comparison dataset rounds decimal
-        bathroom counts upward using the project's
-        existing rounding convention.
+        Uses the project's existing rounding convention:
 
-        Examples:
-            2 bathroom   -> 2
-            2.5 bathroom -> 3
-            3.5 bath     -> 4
+            2.0 -> 2
+            2.5 -> 3
+            3.5 -> 4
         """
+
+        if not text:
+            return None
+
+        text = str(text)
 
         patterns = [
-            r"(\d+(?:\.\d+)?)\s*bathrooms?",
-            r"(\d+(?:\.\d+)?)\s*ba\b",
-            r"(\d+(?:\.\d+)?)\s*baths?\b"
+            r"\b(\d+(?:\.\d+)?)\s*bathroom\b",
+            r"\b(\d+(?:\.\d+)?)\s*bathrooms\b",
+
+            # Robustness for partially cleaned text.
+            r"\b(\d+(?:\.\d+)?)\s*ba\b",
+            r"\b(\d+(?:\.\d+)?)\s*baths?\b",
         ]
 
         for pattern in patterns:
@@ -176,7 +309,7 @@ class EntityExtractor:
             match = re.search(
                 pattern,
                 text,
-                re.I
+                re.IGNORECASE,
             )
 
             if match:
@@ -193,36 +326,41 @@ class EntityExtractor:
 
         return None
 
-    # ====================================
+    # =========================================================
     # PRICE EXTRACTION
-    # ====================================
+    # =========================================================
 
-    def extract_price(self, text):
+    def extract_price(
+        self,
+        raw_text,
+        cleaned_text=None,
+    ):
         """
         Extract listing price.
 
-        Supports both raw and cleaned text.
-
-        Examples:
+        raw_text is checked first because it preserves:
+            $725,000
             $450000
-            $450,000
-            Price: $450000
-            offered at $725,000
-            priced at 450000
-            asking 1200000
 
-        TextCleaner also converts:
+        cleaned_text may contain values normalized by TextCleaner:
             450k -> 450000
             1.2m -> 1200000
         """
 
-        # --------------------------------
-        # RAW DOLLAR PRICE
-        # --------------------------------
+        if raw_text is None:
+            raw_text = ""
+
+        raw_text = str(
+            raw_text
+        )
+
+        # -----------------------------------------------------
+        # RAW $ PRICE
+        # -----------------------------------------------------
 
         raw_match = re.search(
             r"\$\s*([\d,]{5,})",
-            text
+            raw_text,
         )
 
         if raw_match:
@@ -230,29 +368,38 @@ class EntityExtractor:
             value = (
                 raw_match
                 .group(1)
-                .replace(",", "")
+                .replace(
+                    ",",
+                    "",
+                )
             )
 
-            return int(value)
-
-        # --------------------------------
-        # CLEAN TEXT
-        # --------------------------------
-
-        cleaned_text = (
-            self.cleaner.clean_text(
-                text
+            return int(
+                value
             )
+
+        # -----------------------------------------------------
+        # CLEANED / NORMALIZED PRICE
+        # -----------------------------------------------------
+
+        if cleaned_text is None:
+            cleaned_text = raw_text
+
+        cleaned_text = str(
+            cleaned_text
         )
 
         patterns = [
             (
                 r"\b(?:price|priced|offered|listed|asking)"
                 r"\s*(?:at|for|of)?\s*"
-                r"(\d{5,8})\b"
+                r"(\d{5,9})\b"
             ),
 
-            r"\b(\d{5,8})\s+dollars?\b"
+            (
+                r"\b(\d{5,9})"
+                r"\s+dollars?\b"
+            ),
         ]
 
         for pattern in patterns:
@@ -260,7 +407,7 @@ class EntityExtractor:
             match = re.search(
                 pattern,
                 cleaned_text,
-                re.I
+                re.IGNORECASE,
             )
 
             if match:
@@ -271,28 +418,37 @@ class EntityExtractor:
 
         return None
 
-    # ====================================
-    # SQUARE FOOTAGE EXTRACTION
-    # ====================================
+    # =========================================================
+    # SQUARE FOOTAGE
+    # =========================================================
 
-    def extract_sqft(self, text):
+    def extract_sqft(
+        self,
+        text,
+    ):
         """
         Extract square footage.
 
-        TextCleaner normalizes common forms such as:
-
+        TextCleaner normally converts:
             1,850 sqft
-                ->
+        into:
             1850 square feet
-
-        Also supports common uncleaned forms.
         """
 
+        if not text:
+            return None
+
+        text = str(
+            text
+        )
+
         patterns = [
-            r"(\d{3,7})\s*square\s+feet\b",
-            r"(\d{3,7})\s*sqft\b",
-            r"(\d{3,7})\s*sq\.?\s*ft\.?\b",
-            r"(\d{3,7})\s*sf\b"
+            r"\b(\d{3,7})\s*square\s+feet\b",
+
+            # Robustness for uncleaned/partially-cleaned text.
+            r"\b([\d,]{3,9})\s*sqft\b",
+            r"\b([\d,]{3,9})\s*sq\.?\s*ft\.?\b",
+            r"\b([\d,]{3,9})\s*sf\b",
         ]
 
         for pattern in patterns:
@@ -300,44 +456,48 @@ class EntityExtractor:
             match = re.search(
                 pattern,
                 text,
-                re.I
+                re.IGNORECASE,
             )
 
             if match:
 
                 value = (
-                    match
-                    .group(1)
-                    .replace(",", "")
+                    match.group(1)
+                    .replace(
+                        ",",
+                        "",
+                    )
                 )
 
-                return int(value)
+                return int(
+                    value
+                )
 
         return None
 
-    # ====================================
+    # =========================================================
     # TAXONOMY ENTITY EXTRACTION
-    # ====================================
+    # =========================================================
 
-    def extract_entities(self, text):
+    def extract_entities(
+        self,
+        text,
+    ):
         """
-        Match taxonomy concepts across all
-        eight categories.
+        Match taxonomy concepts across all categories.
 
-        Aliases return their canonical term.
+        This method expects text that has already been cleaned
+        by TextCleaner.
 
-        Example:
-
-            taxonomy:
-                term = "solar"
-                alias = "solar panels"
-
-            text:
-                "Owned solar panels included"
-
-            result:
-                "solar"
+        Aliases return their canonical taxonomy term.
         """
+
+        if not text:
+            text = ""
+
+        text = str(
+            text
+        )
 
         results = {}
 
@@ -347,30 +507,27 @@ class EntityExtractor:
 
             matches = []
 
-            for term, patterns in term_patterns:
-
-                # Each canonical term can have
-                # multiple regex patterns:
-                #
-                # canonical term
-                # + aliases
+            for canonical, patterns in (
+                term_patterns
+            ):
 
                 for pattern in patterns:
 
-                    if pattern.search(text):
+                    if pattern.search(
+                        text
+                    ):
 
                         matches.append(
-                            term
+                            canonical
                         )
 
-                        # Once one variant matches,
-                        # don't add the same canonical
-                        # term again.
+                        # Don't add same canonical
+                        # term twice because of aliases.
                         break
 
-            # Remove duplicates while
-            # preserving order.
-            results[category] = list(
+            results[
+                category
+            ] = list(
                 dict.fromkeys(
                     matches
                 )
@@ -378,34 +535,40 @@ class EntityExtractor:
 
         return results
 
-    # ====================================
-    # AMENITY-ONLY EXTRACTION
-    # ====================================
+    # =========================================================
+    # AMENITIES
+    # =========================================================
 
-    def extract_amenities(self, text):
+    def extract_amenities(
+        self,
+        text,
+    ):
         """
-        Return only taxonomy concepts belonging
-        to the amenities category.
+        Return only taxonomy terms from the amenities category.
 
-        This method remains available for backwards
-        compatibility with the earlier project code.
+        Kept for compatibility with previous code.
         """
+
+        if not text:
+            return []
 
         amenities = []
 
-        for term, patterns in (
+        for canonical, patterns in (
             self.entity_patterns.get(
                 "amenities",
-                []
+                [],
             )
         ):
 
             for pattern in patterns:
 
-                if pattern.search(text):
+                if pattern.search(
+                    text
+                ):
 
                     amenities.append(
-                        term
+                        canonical
                     )
 
                     break
@@ -416,104 +579,117 @@ class EntityExtractor:
             )
         )
 
-    # ====================================
-    # MAIN EXTRACTION METHOD
-    # ====================================
+    # =========================================================
+    # MAIN EXTRACTION
+    # =========================================================
 
-    def extract_all(self, text):
+    def extract_all(
+        self,
+        raw_text,
+        cleaned_text=None,
+    ):
         """
-        Extract all supported entities from raw text.
+        Extract all supported entities.
 
-        The caller does NOT need to run TextCleaner
-        manually before calling this method.
+        EntityExtractor does NOT clean text.
 
-        Returns:
-            bedrooms
-            bathrooms
-            price
-            sqft
-            amenities
-            entities (all 8 taxonomy categories)
-        """
+        Preferred usage:
 
-        # Handle missing values safely
-        if text is None:
-            text = ""
+            raw = listing["L_Remarks"]
+            cleaned = cleaner.clean_text(raw)
 
-        text = str(text)
-
-        # --------------------------------
-        # PRICE
-        #
-        # Use raw text so dollar formatting
-        # remains available to extract_price().
-        # --------------------------------
-
-        price = self.extract_price(
-            text
-        )
-
-        # --------------------------------
-        # CLEAN TEXT FOR EVERYTHING ELSE
-        # --------------------------------
-
-        cleaned_text = (
-            self.cleaner.clean_text(
-                text
+            result = extractor.extract_all(
+                raw_text=raw,
+                cleaned_text=cleaned
             )
+
+        If cleaned_text is omitted, raw_text is used for both.
+        This preserves backwards compatibility, but callers
+        should normally provide cleaned_text.
+        """
+
+        if raw_text is None:
+            raw_text = ""
+
+        raw_text = str(
+            raw_text
         )
 
-        # --------------------------------
-        # TAXONOMY ENTITIES
-        # --------------------------------
+        if cleaned_text is None:
+            cleaned_text = raw_text
 
-        entities = self.extract_entities(
+        cleaned_text = str(
             cleaned_text
         )
 
-        # --------------------------------
-        # RETURN RESULTS
-        # --------------------------------
+        # -----------------------------------------------------
+        # PRICE
+        # -----------------------------------------------------
+
+        price = self.extract_price(
+            raw_text=raw_text,
+            cleaned_text=cleaned_text,
+        )
+
+        # -----------------------------------------------------
+        # TAXONOMY
+        # -----------------------------------------------------
+
+        entities = (
+            self.extract_entities(
+                cleaned_text
+            )
+        )
+
+        # -----------------------------------------------------
+        # OUTPUT
+        # -----------------------------------------------------
 
         return {
-            "bedrooms":
+            "bedrooms": (
                 self.extract_bedrooms(
                     cleaned_text
-                ),
+                )
+            ),
 
-            "bathrooms":
+            "bathrooms": (
                 self.extract_bathrooms(
                     cleaned_text
-                ),
+                )
+            ),
 
-            "price":
-                price,
+            "price": price,
 
-            "sqft":
+            "sqft": (
                 self.extract_sqft(
                     cleaned_text
-                ),
+                )
+            ),
 
-            "amenities":
+            "amenities": (
                 entities.get(
                     "amenities",
-                    []
-                ),
+                    [],
+                )
+            ),
 
-            "entities":
-                entities
+            "entities": entities,
         }
 
 
-# ========================================
+# =============================================================
 # MANUAL TEST
-# ========================================
+# =============================================================
 
 if __name__ == "__main__":
 
+    from scripts.text_cleaning import TextCleaner
+
+    cleaner = TextCleaner()
+
     extractor = EntityExtractor()
 
-    text = """
+    raw_text = """
     Beautiful 3BR / 2.5BA single-family home
     offered at $725,000 with 1,850 sq. ft.
     Features solar panels, recessed lighting,
@@ -521,13 +697,40 @@ if __name__ == "__main__":
     A/C, RV parking and mountain views.
     """
 
+    cleaned_text = (
+        cleaner.clean_text(
+            raw_text
+        )
+    )
+
     result = extractor.extract_all(
-        text
+        raw_text=raw_text,
+        cleaned_text=cleaned_text,
+    )
+
+    print(
+        "RAW:"
+    )
+
+    print(
+        raw_text
+    )
+
+    print(
+        "\nCLEANED:"
+    )
+
+    print(
+        cleaned_text
+    )
+
+    print(
+        "\nENTITIES:"
     )
 
     print(
         json.dumps(
             result,
-            indent=2
+            indent=2,
         )
     )
