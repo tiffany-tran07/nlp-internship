@@ -3,7 +3,7 @@ import math
 import pandas as pd
 
 
-class SchemaValidator:
+class SchemaValidator: 
     """
     Validates structured filters produced by QueryParser.
     """
