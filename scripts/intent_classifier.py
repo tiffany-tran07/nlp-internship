@@ -1,14 +1,21 @@
+# scripts/query_intent_classifier.py
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Dict, Iterable, List, Sequence, Tuple
 
+import joblib
 import numpy as np
 import pandas as pd
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+)
 from sklearn.model_selection import train_test_split
 
 from scripts.query_parser import QueryParser
@@ -23,7 +30,9 @@ VALID_LABELS = (
 
 @dataclass(frozen=True)
 class IntentPrediction:
-    """Structured prediction result."""
+    """
+    Structured intent prediction.
+    """
 
     intent: str
     confidence: float
@@ -32,91 +41,351 @@ class IntentPrediction:
 
 
 class QueryIntentClassifier:
-    """Classify real-estate search queries into language-based intent classes."""
+    """
+    Classify real-estate search queries using language only.
+
+    Intent categories:
+
+        browsing
+            General property exploration.
+
+        researching
+            Queries seeking information, comparisons,
+            neighborhoods, taxes, schools, market information, etc.
+
+        high_intent_inquiry
+            Queries that contain stronger action-oriented or
+            transaction-oriented language.
+    """
 
     def __init__(
         self,
-        max_features: int = 500,
+        max_features: int = 1000,
         confidence_threshold: float = 0.60,
         random_state: int = 42,
     ) -> None:
+
+        self.max_features = max_features
+        self.confidence_threshold = confidence_threshold
+        self.random_state = random_state
+
         self.vectorizer = TfidfVectorizer(
             max_features=max_features,
+
+            # Unigrams + bigrams are useful for phrases like:
+            # "open house"
+            # "this weekend"
+            # "best neighborhoods"
+            # "property taxes"
             ngram_range=(1, 2),
+
             lowercase=True,
             strip_accents="unicode",
-            stop_words="english",
+
+            # I would NOT remove stop words here.
+            #
+            # Words such as "when", "where", "this",
+            # "near", "for", etc. can carry useful intent signals.
+            stop_words=None,
+
+            sublinear_tf=True,
         )
+
         self.model = LogisticRegression(
-            max_iter=1000,
+            max_iter=2000,
             class_weight="balanced",
             random_state=random_state,
         )
-        self.labels = list(VALID_LABELS)
-        self.confidence_threshold = confidence_threshold
+
+        self.labels = list(
+            VALID_LABELS
+        )
+
         self._is_trained = False
 
-    def train(self, queries: Sequence[str], labels: Sequence[str]) -> None:
-        """Train the TF-IDF vectorizer and logistic-regression classifier."""
-        self._validate_training_data(queries, labels)
-        X = self.vectorizer.fit_transform(queries)
-        self.model.fit(X, labels)
+    # =========================================================
+    # TRAINING
+    # =========================================================
+
+    def train(
+        self,
+        queries: Sequence[str],
+        labels: Sequence[str],
+    ) -> None:
+        """
+        Train the classifier.
+        """
+
+        self._validate_training_data(
+            queries,
+            labels,
+        )
+
+        X = self.vectorizer.fit_transform(
+            queries
+        )
+
+        self.model.fit(
+            X,
+            labels,
+        )
+
         self._is_trained = True
 
-    def predict(self, query: str) -> Tuple[str, float]:
-        """Return ``(intent, confidence)`` for one query."""
-        prediction = self.predict_detailed(query)
-        return prediction.intent, prediction.confidence
+    # =========================================================
+    # PREDICTION
+    # =========================================================
 
-    def predict_detailed(self, query: str) -> IntentPrediction:
-        """Return intent, confidence, all probabilities, and uncertainty flag."""
+    def predict(
+        self,
+        query: str,
+    ) -> Tuple[str, float]:
+        """
+        Return:
+
+            (intent, confidence)
+        """
+
+        prediction = (
+            self.predict_detailed(
+                query
+            )
+        )
+
+        return (
+            prediction.intent,
+            prediction.confidence,
+        )
+
+    def predict_detailed(
+        self,
+        query: str,
+    ) -> IntentPrediction:
+        """
+        Return:
+            intent
+            confidence
+            probabilities for every class
+            uncertain flag
+        """
+
         self._ensure_trained()
-        cleaned_query = self._validate_query(query)
 
-        X = self.vectorizer.transform([cleaned_query])
-        probabilities = self.model.predict_proba(X)[0]
+        query = self._validate_query(
+            query
+        )
+
+        X = self.vectorizer.transform(
+            [query]
+        )
+
+        probabilities = (
+            self.model.predict_proba(
+                X
+            )[0]
+        )
+
         classes = self.model.classes_
-        best_index = int(np.argmax(probabilities))
 
-        intent = str(classes[best_index])
-        confidence = float(probabilities[best_index])
+        best_index = int(
+            np.argmax(
+                probabilities
+            )
+        )
+
+        intent = str(
+            classes[
+                best_index
+            ]
+        )
+
+        confidence = float(
+            probabilities[
+                best_index
+            ]
+        )
+
         probability_map = {
             str(label): float(probability)
-            for label, probability in zip(classes, probabilities)
+            for label, probability
+            in zip(
+                classes,
+                probabilities,
+            )
         }
 
         return IntentPrediction(
             intent=intent,
             confidence=confidence,
             probabilities=probability_map,
-            uncertain=confidence < self.confidence_threshold,
+            uncertain=(
+                confidence
+                < self.confidence_threshold
+            ),
         )
 
-    def predict_batch(self, queries: Iterable[str]) -> List[IntentPrediction]:
-        """Predict intent for multiple queries."""
-        return [self.predict_detailed(query) for query in queries]
+    def predict_batch(
+        self,
+        queries: Iterable[str],
+    ) -> List[IntentPrediction]:
+        """
+        Predict multiple queries.
+        """
+
+        return [
+            self.predict_detailed(
+                query
+            )
+            for query in queries
+        ]
+
+    # =========================================================
+    # WEEK 4 QUERY PARSER INTEGRATION
+    # =========================================================
+
+    def understand_query(
+        self,
+        query: str,
+        parser: QueryParser,
+    ) -> Dict[str, object]:
+        """
+        Combine Week 4 structured query parsing with
+        intent classification.
+
+        Example output:
+
+        {
+            "query": "...",
+
+            "filters": {
+                "city": "Irvine",
+                "price_max": 900000,
+                ...
+            },
+
+            "intent": "high_intent_inquiry",
+
+            "intent_confidence": 0.81,
+
+            "intent_uncertain": False,
+
+            "intent_probabilities": {
+                ...
+            }
+        }
+        """
+
+        query = self._validate_query(
+            query
+        )
+
+        parsed_filters = parser.parse(
+            query
+        )
+
+        prediction = (
+            self.predict_detailed(
+                query
+            )
+        )
+
+        return {
+            "query": query,
+
+            "filters": parsed_filters,
+
+            "intent": (
+                prediction.intent
+            ),
+
+            "intent_confidence": (
+                prediction.confidence
+            ),
+
+            "intent_uncertain": (
+                prediction.uncertain
+            ),
+
+            "intent_probabilities": (
+                prediction.probabilities
+            ),
+        }
+
+    # =========================================================
+    # EVALUATION
+    # =========================================================
 
     def evaluate(
         self,
         queries: Sequence[str],
         labels: Sequence[str],
     ) -> Dict[str, object]:
-        """Evaluate a trained model against labeled examples."""
-        self._ensure_trained()
-        if len(queries) != len(labels):
-            raise ValueError("queries and labels must have the same length")
+        """
+        Evaluate against held-out labeled data.
+        """
 
-        X = self.vectorizer.transform(queries)
-        predicted = self.model.predict(X)
-        accuracy = float(accuracy_score(labels, predicted))
-        report = classification_report(
-            labels,
-            predicted,
-            labels=list(VALID_LABELS),
-            output_dict=True,
-            zero_division=0,
+        self._ensure_trained()
+
+        if len(queries) != len(labels):
+            raise ValueError(
+                "queries and labels must have the same length"
+            )
+
+        if len(queries) == 0:
+            raise ValueError(
+                "evaluation data cannot be empty"
+            )
+
+        X = self.vectorizer.transform(
+            queries
         )
-        return {"accuracy": accuracy, "classification_report": report}
+
+        predicted = (
+            self.model.predict(
+                X
+            )
+        )
+
+        accuracy = float(
+            accuracy_score(
+                labels,
+                predicted,
+            )
+        )
+
+        report = (
+            classification_report(
+                labels,
+                predicted,
+                labels=list(
+                    VALID_LABELS
+                ),
+                output_dict=True,
+                zero_division=0,
+            )
+        )
+
+        matrix = (
+            confusion_matrix(
+                labels,
+                predicted,
+                labels=list(
+                    VALID_LABELS
+                ),
+            )
+        )
+
+        return {
+            "accuracy": accuracy,
+            "classification_report": report,
+            "confusion_matrix": (
+                matrix.tolist()
+            ),
+        }
+
+    # =========================================================
+    # HOLDOUT TRAINING
+    # =========================================================
 
     @classmethod
     def train_with_holdout(
@@ -126,14 +395,29 @@ class QueryIntentClassifier:
         test_size: float = 0.20,
         random_state: int = 42,
         **classifier_kwargs,
-    ) -> Tuple["QueryIntentClassifier", Dict[str, object]]:
-        """Train with a stratified holdout split and return model + metrics."""
-        if len(queries) != len(labels):
-            raise ValueError("queries and labels must have the same length")
-        if len(set(labels)) < 2:
-            raise ValueError("at least two intent classes are required")
+    ) -> Tuple[
+        "QueryIntentClassifier",
+        Dict[str, object],
+    ]:
+        """
+        Split dataset into train/test sets using stratification.
 
-        X_train, X_test, y_train, y_test = train_test_split(
+        Returns:
+            trained classifier
+            evaluation metrics
+        """
+
+        cls._validate_training_data(
+            queries,
+            labels,
+        )
+
+        (
+            X_train,
+            X_test,
+            y_train,
+            y_test,
+        ) = train_test_split(
             list(queries),
             list(labels),
             test_size=test_size,
@@ -141,120 +425,515 @@ class QueryIntentClassifier:
             stratify=list(labels),
         )
 
-        classifier = cls(random_state=random_state, **classifier_kwargs)
-        classifier.train(X_train, y_train)
-        metrics = classifier.evaluate(X_test, y_test)
-        metrics["test_queries"] = X_test
-        metrics["test_labels"] = y_test
-        return classifier, metrics
-
-    def enrich_parsed_query(self, parsed_query: Dict[str, object]) -> Dict[str, object]:
-        """Add intent information to output from a query parser.
-
-        The parser output should contain the original query under one of these
-        keys: ``query``, ``raw_query``, or ``text``.
-        """
-        query = next(
-            (
-                parsed_query[key]
-                for key in ("query", "raw_query", "text")
-                if key in parsed_query
-            ),
-            None,
+        classifier = cls(
+            random_state=random_state,
+            **classifier_kwargs,
         )
-        if not isinstance(query, str) or not query.strip():
-            raise ValueError(
-                "parsed_query must include a non-empty 'query', 'raw_query', or 'text'"
+
+        classifier.train(
+            X_train,
+            y_train,
+        )
+
+        metrics = classifier.evaluate(
+            X_test,
+            y_test,
+        )
+
+        metrics[
+            "train_size"
+        ] = len(
+            X_train
+        )
+
+        metrics[
+            "test_size"
+        ] = len(
+            X_test
+        )
+
+        metrics[
+            "test_queries"
+        ] = X_test
+
+        metrics[
+            "test_labels"
+        ] = y_test
+
+        return (
+            classifier,
+            metrics,
+        )
+
+    # =========================================================
+    # MODEL SAVE / LOAD
+    # =========================================================
+
+    def save(
+        self,
+        path: str,
+    ) -> None:
+        """
+        Save trained classifier to disk.
+        """
+
+        self._ensure_trained()
+
+        joblib.dump(
+            {
+                "vectorizer": (
+                    self.vectorizer
+                ),
+
+                "model": (
+                    self.model
+                ),
+
+                "confidence_threshold": (
+                    self.confidence_threshold
+                ),
+
+                "max_features": (
+                    self.max_features
+                ),
+
+                "random_state": (
+                    self.random_state
+                ),
+            },
+            path,
+        )
+
+    @classmethod
+    def load(
+        cls,
+        path: str,
+    ) -> "QueryIntentClassifier":
+        """
+        Load saved classifier.
+        """
+
+        data = joblib.load(
+            path
+        )
+
+        classifier = cls(
+            max_features=data[
+                "max_features"
+            ],
+
+            confidence_threshold=data[
+                "confidence_threshold"
+            ],
+
+            random_state=data[
+                "random_state"
+            ],
+        )
+
+        classifier.vectorizer = (
+            data["vectorizer"]
+        )
+
+        classifier.model = (
+            data["model"]
+        )
+
+        classifier._is_trained = True
+
+        return classifier
+
+    # =========================================================
+    # VALIDATION
+    # =========================================================
+
+    def _ensure_trained(
+        self,
+    ) -> None:
+
+        if not self._is_trained:
+
+            raise RuntimeError(
+                "Classifier has not been trained yet"
             )
 
-        prediction = self.predict_detailed(query)
-        enriched = dict(parsed_query)
-        enriched["intent"] = prediction.intent
-        enriched["intent_confidence"] = prediction.confidence
-        enriched["intent_uncertain"] = prediction.uncertain
-        enriched["intent_probabilities"] = prediction.probabilities
-        return enriched
-
-    def _ensure_trained(self) -> None:
-        if not self._is_trained:
-            raise RuntimeError("Classifier has not been trained yet")
-
     @staticmethod
-    def _validate_query(query: str) -> str:
-        if not isinstance(query, str):
-            raise TypeError("query must be a string")
+    def _validate_query(
+        query: str,
+    ) -> str:
+
+        if not isinstance(
+            query,
+            str,
+        ):
+            raise TypeError(
+                "query must be a string"
+            )
+
         query = query.strip()
+
         if not query:
-            raise ValueError("query cannot be empty")
+            raise ValueError(
+                "query cannot be empty"
+            )
+
         return query
 
     @staticmethod
     def _validate_training_data(
-        queries: Sequence[str], labels: Sequence[str]
+        queries: Sequence[str],
+        labels: Sequence[str],
     ) -> None:
+
         if len(queries) != len(labels):
-            raise ValueError("queries and labels must have the same length")
-        if not queries:
-            raise ValueError("training data cannot be empty")
 
-        invalid_labels = sorted(set(labels) - set(VALID_LABELS))
+            raise ValueError(
+                "queries and labels must have the same length"
+            )
+
+        if len(queries) == 0:
+
+            raise ValueError(
+                "training data cannot be empty"
+            )
+
+        invalid_labels = (
+            sorted(
+                set(labels)
+                - set(VALID_LABELS)
+            )
+        )
+
         if invalid_labels:
-            raise ValueError(f"invalid labels: {invalid_labels}")
 
-        if len(set(labels)) < 2:
-            raise ValueError("training data must contain at least two intent classes")
+            raise ValueError(
+                f"invalid labels: "
+                f"{invalid_labels}"
+            )
+
+        if len(
+            set(labels)
+        ) < 2:
+
+            raise ValueError(
+                "training data must contain "
+                "at least two intent classes"
+            )
 
         for query in queries:
-            if not isinstance(query, str) or not query.strip():
-                raise ValueError("all training queries must be non-empty strings")
 
+            if (
+                not isinstance(
+                    query,
+                    str,
+                )
+                or not query.strip()
+            ):
+
+                raise ValueError(
+                    "all training queries must "
+                    "be non-empty strings"
+                )
+
+
+# =============================================================
+# TRAIN + EVALUATE
+# =============================================================
 
 if __name__ == "__main__":
-    # demo_queries = [
-    #     "show me homes in San Diego",
-    #     "luxury homes in Beverly Hills",
-    #     "homes with pools in Irvine",
-    #     "condos near UC Irvine with low HOA",
-    #     "areas in San Diego with low property taxes",
-    #     "best neighborhoods in Irvine for families",
-    #     "move-in ready homes in San Diego under 1.2m",
-    #     "homes available this weekend with open houses",
-    #     "new listings in Irvine under 900k with seller financing",
-    # ]
-    # demo_labels = [
-    #     "browsing",
-    #     "browsing",
-    #     "browsing",
-    #     "researching",
-    #     "researching",
-    #     "researching",
-    #     "high_intent_inquiry",
-    #     "high_intent_inquiry",
-    #     "high_intent_inquiry",
-    # ]
 
-    query_set = pd.read_csv("data/processed/california_homebuyer_queries.csv")
-    train_df, test_df = train_test_split(
-        query_set,
-        test_size=0.2,
-        random_state=42,
-        stratify=query_set["category"]
+    DATA_PATH = (
+        "data/processed/"
+        "california_homebuyer_queries.csv"
     )
-    classifier = QueryIntentClassifier(confidence_threshold=0.55)
-    classifier.train(train_df["query"].tolist(), train_df["category"].tolist())
 
-    # result = classifier.predict_detailed("homes with open houses this weekend")
-    # print("Intent:", result.intent)
-    # print("Confidence:", round(result.confidence, 3))
-    # print("Uncertain:", result.uncertain)
-    # print("Probabilities:", result.probabilities)
+    df = pd.read_csv(
+        DATA_PATH
+    )
 
-    y_true = test_df["category"].tolist()
+    # ---------------------------------------------------------
+    # DATASET VALIDATION
+    # ---------------------------------------------------------
 
-    y_pred = [
-        classifier.predict_detailed(query).intent
-        for query in test_df["query"]
+    if "query" not in df.columns:
+        raise ValueError(
+            "Dataset must contain a 'query' column"
+        )
+
+    if "category" not in df.columns:
+        raise ValueError(
+            "Dataset must contain a 'category' column"
+        )
+
+    # Remove incomplete rows.
+    df = df.dropna(
+        subset=[
+            "query",
+            "category",
+        ]
+    )
+
+    df["query"] = (
+        df["query"]
+        .astype(str)
+        .str.strip()
+    )
+
+    df["category"] = (
+        df["category"]
+        .astype(str)
+        .str.strip()
+        .str.lower()
+    )
+
+    df = df[
+        df["query"] != ""
     ]
 
-    print(classification_report(y_true, y_pred))
-    print(confusion_matrix(y_true, y_pred))
+    print(
+        "=" * 60
+    )
+
+    print(
+        "INTENT CLASSIFICATION DATASET"
+    )
+
+    print(
+        "=" * 60
+    )
+
+    print(
+        f"Total queries: {len(df)}"
+    )
+
+    print()
+
+    print(
+        "Label distribution:"
+    )
+
+    print(
+        df[
+            "category"
+        ].value_counts()
+    )
+
+    print()
+
+    # ---------------------------------------------------------
+    # DELIVERABLE: 200+ LABELED QUERIES
+    # ---------------------------------------------------------
+
+    if len(df) < 200:
+
+        print(
+            "WARNING: Dataset contains "
+            f"only {len(df)} queries. "
+            "Requirement is 200+."
+        )
+
+    # ---------------------------------------------------------
+    # TRAIN WITH HOLDOUT
+    # ---------------------------------------------------------
+
+    classifier, metrics = (
+        QueryIntentClassifier.train_with_holdout(
+            queries=(
+                df[
+                    "query"
+                ].tolist()
+            ),
+
+            labels=(
+                df[
+                    "category"
+                ].tolist()
+            ),
+
+            test_size=0.20,
+
+            random_state=42,
+
+            confidence_threshold=0.55,
+        )
+    )
+
+    # ---------------------------------------------------------
+    # RESULTS
+    # ---------------------------------------------------------
+
+    print()
+    print(
+        "=" * 60
+    )
+
+    print(
+        "HELD-OUT TEST RESULTS"
+    )
+
+    print(
+        "=" * 60
+    )
+
+    print(
+        f"Training examples: "
+        f"{metrics['train_size']}"
+    )
+
+    print(
+        f"Testing examples:  "
+        f"{metrics['test_size']}"
+    )
+
+    print()
+
+    accuracy = (
+        metrics["accuracy"]
+    )
+
+    print(
+        f"Accuracy: "
+        f"{accuracy:.2%}"
+    )
+
+    print(
+        "Requirement: >= 80%"
+    )
+
+    print(
+        "Result:",
+        (
+            "PASS"
+            if accuracy >= 0.80
+            else "FAIL"
+        ),
+    )
+
+    print()
+
+    # ---------------------------------------------------------
+    # CLASSIFICATION REPORT
+    # ---------------------------------------------------------
+
+    report = (
+        metrics[
+            "classification_report"
+        ]
+    )
+
+    print(
+        "PER-CLASS RESULTS"
+    )
+
+    print(
+        "-" * 60
+    )
+
+    for label in VALID_LABELS:
+
+        values = report[
+            label
+        ]
+
+        print(
+            f"{label:<22} "
+            f"precision={values['precision']:.2%} "
+            f"recall={values['recall']:.2%} "
+            f"f1={values['f1-score']:.2%}"
+        )
+
+    # ---------------------------------------------------------
+    # UNCERTAIN PREDICTIONS
+    # ---------------------------------------------------------
+
+    uncertain_count = 0
+
+    print()
+    print(
+        "=" * 60
+    )
+
+    print(
+        "UNCERTAIN TEST PREDICTIONS"
+    )
+
+    print(
+        "=" * 60
+    )
+
+    for query in (
+        metrics[
+            "test_queries"
+        ]
+    ):
+
+        prediction = (
+            classifier.predict_detailed(
+                query
+            )
+        )
+
+        if prediction.uncertain:
+
+            uncertain_count += 1
+
+            print(
+                f"\nQUERY: {query}"
+            )
+
+            print(
+                f"Intent: "
+                f"{prediction.intent}"
+            )
+
+            print(
+                f"Confidence: "
+                f"{prediction.confidence:.2%}"
+            )
+
+            print(
+                "Probabilities:"
+            )
+
+            for (
+                label,
+                probability,
+            ) in (
+                prediction
+                .probabilities
+                .items()
+            ):
+
+                print(
+                    f"    "
+                    f"{label:<22} "
+                    f"{probability:.2%}"
+                )
+
+    print()
+
+    print(
+        f"Uncertain predictions: "
+        f"{uncertain_count}/"
+        f"{metrics['test_size']}"
+    )
+
+    # ---------------------------------------------------------
+    # SAVE MODEL
+    # ---------------------------------------------------------
+
+    model_path = (
+        "data/processed/"
+        "query_intent_classifier.joblib"
+    )
+
+    classifier.save(
+        model_path
+    )
+
+    print()
+
+    print(
+        f"Model saved to: "
+        f"{model_path}"
+    )
