@@ -136,6 +136,21 @@ def test_parser_returns_dictionary(parser):
     )
 
 
+def test_parser_loads_cities_from_processed_schema(tmp_path):
+    listings_path = tmp_path / "listings.csv"
+    pd.DataFrame({"city": ["Irvine", "San Diego"]}).to_csv(
+        listings_path,
+        index=False,
+    )
+
+    parser = QueryParser(
+        listings_path=listings_path,
+        valid_amenities=[],
+    )
+
+    assert parser.parse("homes in Irvine")["city"] == "Irvine"
+
+
 def test_empty_query_rejected(parser):
     with pytest.raises(ValueError):
         parser.parse("")

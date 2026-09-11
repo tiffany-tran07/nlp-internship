@@ -8,6 +8,7 @@ them, conservative regex fallbacks keep every endpoint operational.
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import logging
@@ -20,6 +21,7 @@ import uuid
 from collections import Counter, OrderedDict, defaultdict, deque
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Any, Literal
 
 from fastapi import FastAPI, HTTPException, Request, Response, status
@@ -36,6 +38,14 @@ class Settings:
     rate_limit_per_second: int = int(os.getenv("NLP_RATE_LIMIT_PER_SECOND", "10"))
     listings_path: str | None = os.getenv("NLP_LISTINGS_PATH")
     taxonomy_path: str | None = os.getenv("NLP_TAXONOMY_PATH")
+    db_autoload: bool = os.getenv("DB_AUTOLOAD", "true").lower() in {"1", "true", "yes", "on"}
+    db_host: str = os.getenv("DB_HOST", "localhost")
+    db_port: int = int(os.getenv("DB_PORT", "3306"))
+    db_user: str = os.getenv("DB_USER", "root")
+    db_password: str = os.getenv("DB_PASSWORD", "")
+    db_name: str = os.getenv("DB_NAME", "idx_exchange")
+    db_connect_timeout_seconds: int = int(os.getenv("DB_CONNECT_TIMEOUT_SECONDS", "5"))
+    db_listing_limit: int = max(0, int(os.getenv("DB_LISTING_LIMIT", "0")))
     cors_origins: tuple[str, ...] = tuple(
         item.strip() for item in os.getenv("NLP_CORS_ORIGINS", "").split(",") if item.strip()
     )
@@ -194,6 +204,12 @@ class NLPServices:
         self._load_attempted: set[str] = set()
         self._documents: list[dict[str, Any]] = []
         self._documents_version = 0
+        self._database_state: dict[str, Any] = {
+            "status": "not_loaded",
+            "documents_loaded": 0,
+            "loaded_at": None,
+            "error": None,
+        }
         self._lock = threading.RLock()
 
     def _load_parser(self) -> Any | None:
@@ -206,11 +222,25 @@ class NLPServices:
                 if settings.listings_path:
                     kwargs["listings_path"] = settings.listings_path
                 else:
-                    kwargs["valid_cities"] = []
+                    with self._lock:
+                        kwargs["valid_cities"] = sorted(
+                            {
+                                str(document.get("metadata", {}).get("city", "")).strip()
+                                for document in self._documents
+                                if str(document.get("metadata", {}).get("city", "")).strip()
+                            }
+                        )
                 if settings.taxonomy_path:
                     kwargs["taxonomy_path"] = settings.taxonomy_path
                 else:
-                    kwargs["valid_amenities"] = []
+                    kwargs["valid_amenities"] = [
+                        "pool",
+                        "garage",
+                        "solar panels",
+                        "air conditioning",
+                        "fireplace",
+                        "home office",
+                    ]
                 self._parser = QueryParser(**kwargs)
             except Exception as exc:
                 log_event("service_fallback", service="query_parser", error=str(exc))
@@ -302,6 +332,166 @@ class NLPServices:
     def compliance(self, text: str, text_type: str) -> dict[str, Any]:
         return self._load_checker().check(text, text_type)
 
+    def load_documents_from_database(self) -> dict[str, Any]:
+        """Load searchable listings from MySQL and atomically replace the corpus."""
+        with self._lock:
+            self._database_state = {
+                **self._database_state,
+                "status": "loading",
+                "error": None,
+            }
+
+        connection = None
+        cursor = None
+        try:
+            import mysql.connector
+
+            connection = mysql.connector.connect(
+                host=settings.db_host,
+                port=settings.db_port,
+                user=settings.db_user,
+                password=settings.db_password,
+                database=settings.db_name,
+                connection_timeout=max(1, settings.db_connect_timeout_seconds),
+            )
+            cursor = connection.cursor(dictionary=True)
+            query = """
+                SELECT
+                    L_ListingID AS listing_id,
+                    L_Address AS address,
+                    L_City AS city,
+                    L_Keyword2 AS bedrooms,
+                    LM_Dec_3 AS bathrooms,
+                    L_SystemPrice AS price,
+                    L_Remarks AS remarks
+                FROM rets_property
+                WHERE L_Remarks IS NOT NULL
+                  AND LENGTH(TRIM(L_Remarks)) > 50
+                ORDER BY L_ListingID
+            """
+            if settings.db_listing_limit:
+                # The value is parsed as a non-negative integer at startup, so
+                # interpolation here cannot introduce arbitrary SQL.
+                query += f" LIMIT {settings.db_listing_limit}"
+            cursor.execute(query)
+
+            documents_by_id: dict[str, Document] = {}
+            for row in cursor:
+                listing_id = row.get("listing_id")
+                remarks = row.get("remarks")
+                if listing_id is None or not isinstance(remarks, str) or not remarks.strip():
+                    continue
+                document_id = str(listing_id)
+                documents_by_id[document_id] = Document(
+                    id=document_id,
+                    text=remarks.strip(),
+                    metadata={
+                        "address": row.get("address"),
+                        "city": row.get("city"),
+                        "bedrooms": row.get("bedrooms"),
+                        "bathrooms": row.get("bathrooms"),
+                        "price": row.get("price"),
+                    },
+                )
+
+            count = self.replace_documents(list(documents_by_id.values()))
+            # Recreate the parser on its next use so its city vocabulary is
+            # derived from the newly loaded database corpus.
+            with self._lock:
+                self._parser = None
+                self._load_attempted.discard("parser")
+            cache.clear()
+            state = {
+                "status": "connected",
+                "documents_loaded": count,
+                "loaded_at": datetime.now(timezone.utc).isoformat(),
+                "error": None,
+            }
+            with self._lock:
+                self._database_state = state
+            log_event(
+                "database_documents_loaded",
+                host=settings.db_host,
+                database=settings.db_name,
+                documents=count,
+            )
+        except Exception as exc:
+            state = {
+                "status": "error",
+                "documents_loaded": self.document_count,
+                "loaded_at": self._database_state.get("loaded_at"),
+                "error": str(exc),
+            }
+            with self._lock:
+                self._database_state = state
+            log_event(
+                "database_load_failed",
+                host=settings.db_host,
+                database=settings.db_name,
+                error=str(exc),
+            )
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if connection is not None and connection.is_connected():
+                connection.close()
+
+        return dict(state)
+
+    def load_documents_from_file(self, listings_path: str) -> dict[str, Any]:
+        """Load the configured local listings CSV into the search corpus."""
+        try:
+            with open(listings_path, "r", encoding="utf-8-sig", newline="") as handle:
+                rows = csv.DictReader(handle)
+                documents_by_id: dict[str, Document] = {}
+                for row in rows:
+                    listing_id = next(
+                        (row.get(name) for name in ("listing_id", "id", "L_ListingID") if row.get(name)),
+                        None,
+                    )
+                    text = next(
+                        (row.get(name) for name in ("remarks", "text", "L_Remarks") if row.get(name)),
+                        None,
+                    )
+                    if not listing_id or not text or not text.strip():
+                        continue
+
+                    documents_by_id[str(listing_id)] = Document(
+                        id=str(listing_id),
+                        text=text.strip(),
+                        metadata={
+                            "address": row.get("address") or row.get("L_Address"),
+                            "city": row.get("city") or row.get("L_City"),
+                            "bedrooms": row.get("bedrooms") or row.get("bed") or row.get("L_Keyword2"),
+                            "bathrooms": row.get("bathrooms") or row.get("bath") or row.get("LM_Dec_3"),
+                            "price": row.get("price") or row.get("L_SystemPrice"),
+                        },
+                    )
+
+            count = self.replace_documents(list(documents_by_id.values()))
+            state = {
+                "status": "local",
+                "documents_loaded": count,
+                "loaded_at": datetime.now(timezone.utc).isoformat(),
+                "error": None,
+            }
+            with self._lock:
+                self._database_state = state
+            cache.clear()
+            log_event("file_documents_loaded", path=listings_path, documents=count)
+        except Exception as exc:
+            state = {
+                "status": "error",
+                "documents_loaded": self.document_count,
+                "loaded_at": self._database_state.get("loaded_at"),
+                "error": str(exc),
+            }
+            with self._lock:
+                self._database_state = state
+            log_event("file_load_failed", path=listings_path, error=str(exc))
+
+        return dict(state)
+
     def replace_documents(self, documents: list[Document]) -> int:
         values = [model_data(document) for document in documents]
         ids = [value["id"] for value in values]
@@ -316,6 +506,11 @@ class NLPServices:
     def document_count(self) -> int:
         with self._lock:
             return len(self._documents)
+
+    @property
+    def database_state(self) -> dict[str, Any]:
+        with self._lock:
+            return dict(self._database_state)
 
     @property
     def documents_version(self) -> int:
@@ -381,6 +576,10 @@ async def cached_compute(operation: str, payload: BaseModel, compute: Any) -> tu
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     log_event("application_started")
+    if settings.db_autoload:
+        await run_in_threadpool(services.load_documents_from_database)
+    elif settings.listings_path:
+        await run_in_threadpool(services.load_documents_from_file, settings.listings_path)
     yield
     log_event("application_stopped")
 
@@ -425,7 +624,12 @@ async def health() -> dict[str, str]:
 
 @app.get("/ready", tags=["system"])
 async def ready() -> dict[str, Any]:
-    return {"status": "ready", "documents": services.document_count}
+    database = services.database_state
+    return {
+        "status": "ready" if database["status"] != "error" else "degraded",
+        "documents": services.document_count,
+        "database": database,
+    }
 
 
 @app.post("/search", response_model=SearchResponse, tags=["nlp"])
@@ -501,6 +705,20 @@ async def replace_documents(request: DocumentsRequest) -> dict[str, Any]:
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     return {"documents": count, "cache_entries_invalidated": cache.clear()}
+
+
+@app.post("/documents/reload", tags=["search"])
+async def reload_documents() -> dict[str, Any]:
+    database = await run_in_threadpool(services.load_documents_from_database)
+    if database["status"] == "error":
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={
+                "message": "Could not load listings from the database.",
+                "database": database,
+            },
+        )
+    return {"documents": services.document_count, "database": database}
 
 
 @app.get("/cache/stats", tags=["operations"])

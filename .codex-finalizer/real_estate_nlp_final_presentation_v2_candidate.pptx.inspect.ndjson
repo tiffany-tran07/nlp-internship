@@ -1,0 +1,377 @@
+{"kind":"deck","id":"pr/61g2sh","name":"Deck"}
+{"kind":"layout","layoutId":"1deb12a3-a5f9-49d2-becb-90c6e28473c9","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"eb9a205d-2746-48b0-8105-fb9a1277ade9","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/vt8lu2","slide":1,"title":"NLP","textShapes":5}
+{"kind":"textbox","id":"sh/l0jihsf6","slide":1,"text":"NLP","textPreview":"NLP","textChars":3,"textLines":1,"bbox":[760,55,440,220]}
+{"kind":"shape","id":"sh/yxszmdgf","slide":1,"bbox":[72,128,72,8]}
+{"kind":"textbox","id":"sh/jy10fix0","slide":1,"text":"Real Estate NLP Platform","textPreview":"Real Estate NLP Platform","textChars":24,"textLines":1,"bbox":[72,170,850,120]}
+{"kind":"textbox","id":"sh/wvahk3yp","slide":1,"text":"Technical project presentation","textPreview":"Technical project presentation","textChars":30,"textLines":1,"bbox":[74,304,560,54]}
+{"kind":"textbox","id":"sh/xwjid8fa","slide":1,"text":"Natural language search, structured extraction, summarization, and fair housing compliance through a production FastAPI service","textPreview":"Natural language search, structured extraction, summarization, and fair housing compliance through a production FastAPI service","textChars":127,"textLines":1,"bbox":[74,390,820,120]}
+{"kind":"textbox","id":"sh/atszitgj","slide":1,"text":"NLP Internship  |  September 2026","textPreview":"NLP Internship  |  September 2026","textChars":33,"textLines":1,"bbox":[74,624,520,36]}
+{"kind":"notes","id":"nt/vt8lu2","slide":1,"text":"Opening: This presentation covers the problem, system design, measured results, live demo, technical challenges, production considerations, and lessons learned."}
+{"kind":"slide","id":"sl/db3nk3","slide":2,"title":"The search problem","textShapes":10}
+{"kind":"textbox","id":"sh/hor6to7y","slide":2,"text":"The search problem","textPreview":"The search problem","textChars":18,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/ul0nyton","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/vm9orep8","slide":2,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/4bi5436p","slide":2,"text":"Real estate intent arrives as free text, while listing systems store structured fields and long remarks.","textPreview":"Real estate intent arrives as free text, while listing systems store structured fields and long remarks.","textChars":104,"textLines":1,"bbox":[72,132,1120,72]}
+{"kind":"textbox","id":"sh/5cb6x87a","slide":2,"text":"Natural language","textPreview":"Natural language","textChars":16,"textLines":1,"bbox":[74,265,330,54]}
+{"kind":"shape","id":"sh/ip0n2toj","slide":2,"bbox":[74,326,300,0]}
+{"kind":"textbox","id":"sh/3a9ovyp4","slide":2,"text":"Users mix location, price, rooms, amenities, and exclusions in one sentence.","textPreview":"Users mix location, price, rooms, amenities, and exclusions in one sentence.","textChars":76,"textLines":1,"bbox":[74,350,330,170]}
+{"kind":"textbox","id":"sh/kfy5sz6l","slide":2,"text":"Fragmented data","textPreview":"Fragmented data","textChars":15,"textLines":1,"bbox":[471,265,330,54]}
+{"kind":"shape","id":"sh/lg7ml47q","slide":2,"bbox":[471,326,300,0]}
+{"kind":"textbox","id":"sh/pofi5cja","slide":2,"text":"Useful facts appear across database columns and inconsistent listing remarks.","textPreview":"Useful facts appear across database columns and inconsistent listing remarks.","textChars":77,"textLines":1,"bbox":[471,350,330,170]}
+{"kind":"textbox","id":"sh/4n61w725","slide":2,"text":"Compliance risk","textPreview":"Compliance risk","textChars":15,"textLines":1,"bbox":[868,265,330,54]}
+{"kind":"shape","id":"sh/32x0321k","slide":2,"bbox":[868,326,300,0]}
+{"kind":"textbox","id":"sh/214juxkz","slide":2,"text":"Search and listing language can reference protected classes or exclusionary preferences.","textPreview":"Search and listing language can reference protected classes or exclusionary preferences.","textChars":88,"textLines":1,"bbox":[868,350,330,170]}
+{"kind":"textbox","id":"sh/dsfi9cjm","slide":2,"text":"Goal: return useful property results while preserving explainable filters and visible safety checks.","textPreview":"Goal: return useful property results while preserving explainable filters and visible safety checks.","textChars":100,"textLines":1,"bbox":[74,590,1110,56]}
+{"kind":"notes","id":"nt/db3nk3","slide":2,"text":"Project framing based on scripts/main.py, scripts/query_parser.py, scripts/entity_extractor.py, and scripts/compliance_checker.py."}
+{"kind":"slide","id":"sl/4deul6","slide":3,"title":"Solution approach","textShapes":15}
+{"kind":"textbox","id":"sh/m9wr2t87","slide":3,"text":"Solution approach","textPreview":"Solution approach","textChars":17,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/9w7axory","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/ove943qd","slide":3,"bbox":[64,102,1152,0]}
+{"kind":"shape","id":"sh/bypszy9o","slide":3,"bbox":[56,180,266,350]}
+{"kind":"textbox","id":"sh/axgr6t8j","slide":3,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[80,202,48,48]}
+{"kind":"textbox","id":"sh/x07a18ru","slide":3,"text":"Parse","textPreview":"Parse","textChars":5,"textLines":1,"bbox":[130,198,160,58]}
+{"kind":"shape","id":"sh/wzy983q9","slide":3,"bbox":[84,275,210,0]}
+{"kind":"textbox","id":"sh/j2ps3i90","slide":3,"text":"Convert the query into price, room, location, amenity, and exclusion filters.","textPreview":"Convert the query into price, room, location, amenity, and exclusion filters.","textChars":77,"textLines":1,"bbox":[82,300,214,176]}
+{"kind":"shape","id":"sh/y1gbad8f","slide":3,"bbox":[359,180,266,350]}
+{"kind":"textbox","id":"sh/sni5kz2x","slide":3,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[383,202,48,48]}
+{"kind":"textbox","id":"sh/tormt432","slide":3,"text":"Retrieve","textPreview":"Retrieve","textChars":8,"textLines":1,"bbox":[433,198,160,58]}
+{"kind":"shape","id":"sh/6l0nipkr","slide":3,"bbox":[387,275,210,0]}
+{"kind":"textbox","id":"sh/7m94rulc","slide":3,"text":"Apply metadata filters first, then rank matching remarks by token similarity.","textPreview":"Apply metadata filters first, then rank matching remarks by token similarity.","textChars":77,"textLines":1,"bbox":[385,300,214,176]}
+{"kind":"shape","id":"sh/gr25oz2t","slide":3,"bbox":[662,180,266,350]}
+{"kind":"textbox","id":"sh/hcbmx43e","slide":3,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[686,202,48,48]}
+{"kind":"textbox","id":"sh/upknm9kn","slide":3,"text":"Enrich","textPreview":"Enrich","textChars":6,"textLines":1,"bbox":[736,198,160,58]}
+{"kind":"shape","id":"sh/fqt4vel8","slide":3,"bbox":[690,275,210,0]}
+{"kind":"textbox","id":"sh/4f25sj25","slide":3,"text":"Extract listing entities and select informative sentences for summaries.","textPreview":"Extract listing entities and select informative sentences for summaries.","textChars":72,"textLines":1,"bbox":[688,300,214,176]}
+{"kind":"shape","id":"sh/pgbm1o3a","slide":3,"bbox":[965,180,266,350]}
+{"kind":"textbox","id":"sh/dcrmlovu","slide":3,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[989,202,48,48]}
+{"kind":"textbox","id":"sh/cby5cju9","slide":3,"text":"Review","textPreview":"Review","textChars":6,"textLines":1,"bbox":[1039,198,160,58]}
+{"kind":"shape","id":"sh/bap4jedo","slide":3,"bbox":[993,275,210,0]}
+{"kind":"textbox","id":"sh/q9g3a9c3","slide":3,"text":"Check listing or query text for fair housing risks and return evidence.","textPreview":"Check listing or query text for fair housing risks and return evidence.","textChars":71,"textLines":1,"bbox":[991,300,214,176]}
+{"kind":"textbox","id":"sh/l0rmpovq","slide":3,"text":"FastAPI exposes the same pipeline to the Streamlit interface, OpenAPI clients, and operations tooling.","textPreview":"FastAPI exposes the same pipeline to the Streamlit interface, OpenAPI clients, and operations tooling.","textChars":102,"textLines":1,"bbox":[78,584,1120,60]}
+{"kind":"notes","id":"nt/4deul6","slide":3,"text":"The implementation uses deterministic parsing and extraction, database-backed retrieval, extractive summarization, and rule-based compliance checks."}
+{"kind":"slide","id":"sl/sfws4o","slide":4,"title":"System architecture","textShapes":14}
+{"kind":"textbox","id":"sh/0bit4ji9","slide":4,"text":"System architecture","textPreview":"System architecture","textChars":19,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/zq9svyho","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/yp0b2t03","slide":4,"bbox":[64,102,1152,0]}
+{"kind":"shape","id":"sh/doratozi","slide":4,"bbox":[58,202,225,310]}
+{"kind":"textbox","id":"sh/cnit0jix","slide":4,"text":"User experience","textPreview":"User experience","textChars":15,"textLines":1,"bbox":[78,226,185,54]}
+{"kind":"shape","id":"sh/bm9srehc","slide":4,"bbox":[86,295,169,0]}
+{"kind":"textbox","id":"sh/ql0by907","slide":4,"text":"Streamlit search\nOpenAPI documentation","textPreview":"Streamlit search | OpenAPI documentation","textChars":38,"textLines":2,"bbox":[80,315,181,150]}
+{"kind":"textbox","id":"sh/pkrap4jm","slide":4,"text":"›","textPreview":"›","textChars":1,"textLines":1,"bbox":[291,310,34,70]}
+{"kind":"shape","id":"sh/ojytwzi1","slide":4,"bbox":[332,202,248,310]}
+{"kind":"textbox","id":"sh/6hszid0v","slide":4,"text":"FastAPI service","textPreview":"FastAPI service","textChars":15,"textLines":1,"bbox":[352,226,208,54]}
+{"kind":"shape","id":"sh/721gri1g","slide":4,"bbox":[360,295,192,0]}
+{"kind":"textbox","id":"sh/s3ahkni1","slide":4,"text":"Pydantic validation\nRouting and middleware","textPreview":"Pydantic validation | Routing and middleware","textChars":42,"textLines":2,"bbox":[354,315,204,150]}
+{"kind":"textbox","id":"sh/t43yt8jm","slide":4,"text":"›","textPreview":"›","textChars":1,"textLines":1,"bbox":[588,310,34,70]}
+{"kind":"shape","id":"sh/idszet0z","slide":4,"bbox":[629,202,280,310]}
+{"kind":"textbox","id":"sh/je1gny1k","slide":4,"text":"NLP services","textPreview":"NLP services","textChars":12,"textLines":1,"bbox":[649,226,240,54]}
+{"kind":"shape","id":"sh/kfahg3ip","slide":4,"bbox":[657,295,224,0]}
+{"kind":"textbox","id":"sh/5gjyp8ja","slide":4,"text":"Parse and extract\nSearch and summarize\nCompliance","textPreview":"Parse and extract | Search and summarize | Compliance","textChars":49,"textLines":3,"bbox":[651,315,236,150]}
+{"kind":"textbox","id":"sh/a98zat0n","slide":4,"text":"›","textPreview":"›","textChars":1,"textLines":1,"bbox":[917,310,34,70]}
+{"kind":"shape","id":"sh/vahgjy18","slide":4,"bbox":[958,202,264,310]}
+{"kind":"textbox","id":"sh/zexwruh0","slide":4,"text":"Data layer","textPreview":"Data layer","textChars":10,"textLines":1,"bbox":[978,226,224,54]}
+{"kind":"shape","id":"sh/yd4vipgf","slide":4,"bbox":[986,295,208,0]}
+{"kind":"textbox","id":"sh/lgfetkz6","slide":4,"text":"MySQL listings\nTTL response cache","textPreview":"MySQL listings | TTL response cache","textChars":33,"textLines":2,"bbox":[980,315,220,150]}
+{"kind":"textbox","id":"sh/0f6dkzyl","slide":4,"text":"The API loads database records at startup and keeps conservative NLP fallbacks available when optional resources fail.","textPreview":"The API loads database records at startup and keeps conservative NLP fallbacks available when optional resources fail.","textChars":118,"textLines":1,"bbox":[72,574,1120,66]}
+{"kind":"notes","id":"nt/sfws4o","slide":4,"text":"Sources: scripts/main.py lifespan, NLPServices, middleware, and route definitions; scripts/frontend/search.py."}
+{"kind":"slide","id":"sl/00peud","slide":5,"title":"API surface","textShapes":18}
+{"kind":"textbox","id":"sh/wnytkfq9","slide":5,"text":"API surface","textPreview":"API surface","textChars":11,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/bmpsrapo","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/algbi583","slide":5,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/lsruxk7q","slide":5,"text":"POST","textPreview":"POST","textChars":4,"textLines":1,"bbox":[76,145,70,44]}
+{"kind":"textbox","id":"sh/kritofq5","slide":5,"text":"/search","textPreview":"/search","textChars":7,"textLines":1,"bbox":[160,143,310,48]}
+{"kind":"textbox","id":"sh/jqpcvap0","slide":5,"text":"Natural language retrieval with optional inline documents and structured filters.","textPreview":"Natural language retrieval with optional inline documents and structured filters.","textChars":81,"textLines":1,"bbox":[485,143,700,54]}
+{"kind":"shape","id":"sh/ypgbmp8f","slide":5,"bbox":[160,209,1025,0]}
+{"kind":"textbox","id":"sh/1wnal07m","slide":5,"text":"POST","textPreview":"POST","textChars":4,"textLines":1,"bbox":[76,237,70,44]}
+{"kind":"textbox","id":"sh/0vetcvq1","slide":5,"text":"/parse-query","textPreview":"/parse-query","textChars":12,"textLines":1,"bbox":[160,235,310,48]}
+{"kind":"textbox","id":"sh/uh036dkn","slide":5,"text":"Filters plus optional SQL and bound parameters.","textPreview":"Filters plus optional SQL and bound parameters.","textChars":47,"textLines":1,"bbox":[485,235,700,54]}
+{"kind":"shape","id":"sh/f2t4zi18","slide":5,"bbox":[160,301,1025,0]}
+{"kind":"textbox","id":"sh/g32l8n2t","slide":5,"text":"POST","textPreview":"POST","textChars":4,"textLines":1,"bbox":[76,329,70,44]}
+{"kind":"textbox","id":"sh/h4bm1sje","slide":5,"text":"/extract-entities","textPreview":"/extract-entities","textChars":17,"textLines":1,"bbox":[160,327,310,48]}
+{"kind":"textbox","id":"sh/25k3ax0z","slide":5,"text":"Bedrooms, bathrooms, price, square footage, and taxonomy terms.","textPreview":"Bedrooms, bathrooms, price, square footage, and taxonomy terms.","textChars":63,"textLines":1,"bbox":[485,327,700,54]}
+{"kind":"shape","id":"sh/36t4321k","slide":5,"bbox":[160,393,1025,0]}
+{"kind":"textbox","id":"sh/472lc7i5","slide":5,"text":"POST","textPreview":"POST","textChars":4,"textLines":1,"bbox":[76,421,70,44]}
+{"kind":"textbox","id":"sh/p8bm5cja","slide":5,"text":"/summarize","textPreview":"/summarize","textChars":10,"textLines":1,"bbox":[160,419,310,48]}
+{"kind":"textbox","id":"sh/q94nex0v","slide":5,"text":"Extractive summary with sentence and character limits.","textPreview":"Extractive summary with sentence and character limits.","textChars":54,"textLines":1,"bbox":[485,419,700,54]}
+{"kind":"shape","id":"sh/rad4721g","slide":5,"bbox":[160,485,1025,0]}
+{"kind":"textbox","id":"sh/nedkv2ho","slide":5,"text":"POST","textPreview":"POST","textChars":4,"textLines":1,"bbox":[76,513,70,44]}
+{"kind":"textbox","id":"sh/md432hg3","slide":5,"text":"/check-compliance","textPreview":"/check-compliance","textChars":17,"textLines":1,"bbox":[160,511,310,48]}
+{"kind":"textbox","id":"sh/90v2xczu","slide":5,"text":"Separate listing and query modes with evidence.","textPreview":"Separate listing and query modes with evidence.","textChars":47,"textLines":1,"bbox":[485,511,700,54]}
+{"kind":"textbox","id":"sh/8fml47y9","slide":5,"text":"Operations routes add readiness, health, cache statistics, cache clearing, document replacement, and database reload.","textPreview":"Operations routes add readiness, health, cache statistics, cache clearing, document replacement, and database reload.","textChars":117,"textLines":1,"bbox":[76,612,1110,44]}
+{"kind":"notes","id":"nt/00peud","slide":5,"text":"Source: scripts/main.py. OpenAPI documentation is generated automatically at /docs and /redoc."}
+{"kind":"slide","id":"sl/5vxfd4","slide":6,"title":"Evaluation framework","textShapes":12}
+{"kind":"textbox","id":"sh/do7exo3e","slide":6,"text":"Evaluation framework","textPreview":"Evaluation framework","textChars":20,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/qlwv294n","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/bmpwvel8","slide":6,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/0byx8jmp","slide":6,"text":"Accuracy","textPreview":"Accuracy","textChars":8,"textLines":1,"bbox":[74,160,330,58]}
+{"kind":"shape","id":"sh/lc7e1o3a","slide":6,"bbox":[74,226,300,0]}
+{"kind":"textbox","id":"sh/ypgf6t4j","slide":6,"text":"Does the component return the expected label or field?","textPreview":"Does the component return the expected label or field?","textChars":54,"textLines":1,"bbox":[74,252,325,118]}
+{"kind":"textbox","id":"sh/zapwzyl4","slide":6,"text":"Examples: intent accuracy and compliance accuracy","textPreview":"Examples: intent accuracy and compliance accuracy","textChars":49,"textLines":1,"bbox":[74,400,325,95]}
+{"kind":"textbox","id":"sh/8fixc321","slide":6,"text":"Coverage","textPreview":"Coverage","textChars":8,"textLines":1,"bbox":[471,160,330,58]}
+{"kind":"shape","id":"sh/9gre5836","slide":6,"bbox":[471,226,300,0]}
+{"kind":"textbox","id":"sh/lgv25sza","slide":6,"text":"How often does the component produce a usable result or find a gold label?","textPreview":"How often does the component produce a usable result or find a gold label?","textChars":74,"textLines":1,"bbox":[471,252,325,118]}
+{"kind":"textbox","id":"sh/kfm1c7ip","slide":6,"text":"Examples: parser coverage and extraction recall","textPreview":"Examples: parser coverage and extraction recall","textChars":47,"textLines":1,"bbox":[471,400,325,95]}
+{"kind":"textbox","id":"sh/zed032h4","slide":6,"text":"Latency","textPreview":"Latency","textChars":7,"textLines":1,"bbox":[868,160,330,58]}
+{"kind":"shape","id":"sh/yd4jax0j","slide":6,"bbox":[868,226,300,0]}
+{"kind":"textbox","id":"sh/9kf29cz6","slide":6,"text":"How long does the warm component path take on the local host?","textPreview":"How long does the warm component path take on the local host?","textChars":61,"textLines":1,"bbox":[868,252,325,118]}
+{"kind":"textbox","id":"sh/8j61g7il","slide":6,"text":"Reported as p50 and p95 milliseconds","textPreview":"Reported as p50 and p95 milliseconds","textChars":36,"textLines":1,"bbox":[868,400,325,95]}
+{"kind":"textbox","id":"sh/7idk72h0","slide":6,"text":"Labels stay explicit because coverage, recall, F1, and accuracy answer different questions.","textPreview":"Labels stay explicit because coverage, recall, F1, and accuracy answer different questions.","textChars":91,"textLines":1,"bbox":[74,585,1110,58]}
+{"kind":"notes","id":"nt/5vxfd4","slide":6,"text":"Latency method: warm local component runtime on an Apple Silicon host. Search used 52,742 generated records. Measurements exclude network transport and database startup."}
+{"kind":"slide","id":"sl/k84pvx","slide":7,"title":"Component metrics scorecard","textShapes":3}
+{"kind":"textbox","id":"sh/tkv2dojq","slide":7,"text":"Component metrics scorecard","textPreview":"Component metrics scorecard","textChars":27,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/6x4jit0f","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/7ydkby1k","slide":7,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/5wvi9oju","slide":7,"text":"Quality gaps remain visible instead of converting missing evaluations into proxy scores.","textPreview":"Quality gaps remain visible instead of converting missing evaluations into proxy scores.","textChars":88,"textLines":1,"bbox":[70,608,1120,42]}
+{"kind":"table","id":"tb/dczqxcne","slide":7,"name":"","rows":6,"cols":4,"preview":"Component | Quality result | Coverage result | Warm p50","bbox":[58,142,1164,450]}
+{"kind":"notes","id":"nt/k84pvx","slide":7,"text":"Sources: accuracy tests rerun September 11, 2026; compliance evaluation datasets; local benchmark in .codex-presentation-build/benchmark_components.py."}
+{"kind":"slide","id":"sl/hqkn4k","slide":8,"title":"Accuracy and coverage results","textShapes":18}
+{"kind":"textbox","id":"sh/vyl8vqpk","slide":8,"text":"Accuracy and coverage results","textPreview":"Accuracy and coverage results","textChars":29,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/gzup4v65","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/h03qx07q","slide":8,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/m9s7ylo3","slide":8,"text":"100%","textPreview":"100%","textChars":4,"textLines":1,"bbox":[74,126,155,54]}
+{"kind":"textbox","id":"sh/7a18rqpo","slide":8,"text":"Intent classification accuracy","textPreview":"Intent classification accuracy","textChars":30,"textLines":1,"bbox":[250,124,385,48]}
+{"kind":"textbox","id":"sh/8bap0v69","slide":8,"text":"40 held-out examples after training on 160 labeled queries","textPreview":"40 held-out examples after training on 160 labeled queries","textChars":58,"textLines":1,"bbox":[660,124,525,52]}
+{"kind":"shape","id":"sh/9cjqtg7u","slide":8,"bbox":[250,195,935,0]}
+{"kind":"textbox","id":"sh/y587u18r","slide":8,"text":"100%","textPreview":"100%","textChars":4,"textLines":1,"bbox":[74,222,155,54]}
+{"kind":"textbox","id":"sh/z6hon6pc","slide":8,"text":"Query parser coverage","textPreview":"Query parser coverage","textChars":21,"textLines":1,"bbox":[250,220,385,48]}
+{"kind":"textbox","id":"sh/7etwnqh0","slide":8,"text":"60 of 60 on-topic queries produced at least one filter","textPreview":"60 of 60 on-topic queries produced at least one filter","textChars":54,"textLines":1,"bbox":[660,220,525,52]}
+{"kind":"shape","id":"sh/mdkful0f","slide":8,"bbox":[250,291,935,0]}
+{"kind":"textbox","id":"sh/9gbep0z6","slide":8,"text":"100%","textPreview":"100%","textChars":4,"textLines":1,"bbox":[74,318,155,54]}
+{"kind":"textbox","id":"sh/8f2xwvil","slide":8,"text":"Bedroom and bathroom F1","textPreview":"Bedroom and bathroom F1","textChars":23,"textLines":1,"bbox":[250,316,385,48]}
+{"kind":"textbox","id":"sh/vidgrahc","slide":8,"text":"Each entity evaluated on 100 labeled remarks","textPreview":"Each entity evaluated on 100 labeled remarks","textChars":44,"textLines":1,"bbox":[660,316,525,52]}
+{"kind":"shape","id":"sh/uhkfy50r","slide":8,"bbox":[250,387,935,0]}
+{"kind":"textbox","id":"sh/hkvytkz2","slide":8,"text":"93.6%","textPreview":"93.6%","textChars":5,"textLines":1,"bbox":[74,414,155,54]}
+{"kind":"textbox","id":"sh/wjmx0fih","slide":8,"text":"Price extraction F1","textPreview":"Price extraction F1","textChars":19,"textLines":1,"bbox":[250,412,385,48]}
+{"kind":"textbox","id":"sh/bm9wf6hs","slide":8,"text":"Precision 100% and recall 88% on 100 labels","textPreview":"Precision 100% and recall 88% on 100 labels","textChars":43,"textLines":1,"bbox":[660,412,525,52]}
+{"kind":"shape","id":"sh/ql0fm107","slide":8,"bbox":[250,483,935,0]}
+{"kind":"textbox","id":"sh/eh8zu9kv","slide":8,"text":"77.0%","textPreview":"77.0%","textChars":5,"textLines":1,"bbox":[74,510,155,54]}
+{"kind":"textbox","id":"sh/fih0ne1g","slide":8,"text":"Taxonomy feature recall","textPreview":"Taxonomy feature recall","textChars":23,"textLines":1,"bbox":[250,508,385,48]}
+{"kind":"textbox","id":"sh/g3qhwj21","slide":8,"text":"191 of 248 gold labels found across 100 listings","textPreview":"191 of 248 gold labels found across 100 listings","textChars":48,"textLines":1,"bbox":[660,508,525,52]}
+{"kind":"textbox","id":"sh/14zipojm","slide":8,"text":"Parser coverage indicates a nonempty result, not exact filter correctness.","textPreview":"Parser coverage indicates a nonempty result, not exact filter correctness.","textChars":74,"textLines":1,"bbox":[250,621,935,36]}
+{"kind":"notes","id":"nt/hqkn4k","slide":8,"text":"Sources: tests/test_week7.py, tests/test_week4.py, tests/test_numericf1.py, and data/processed/taxonomy_eval_results.csv. The structured field preservation test also scored 4,000/4,000 but does not test free text extraction."}
+{"kind":"slide","id":"sl/r7k8id","slide":9,"title":"Warm component latency","textShapes":5}
+{"kind":"textbox","id":"sh/d4vulo36","slide":9,"text":"Warm component latency","textPreview":"Warm component latency","textChars":22,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/qh4ba9kf","slide":9,"text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/b2dcjel0","slide":9,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/076dg32h","slide":9,"text":"Search over 52,742 records","textPreview":"Search over 52,742 records","textChars":26,"textLines":1,"bbox":[70,132,500,44]}
+{"kind":"textbox","id":"sh/y54vetkb","slide":9,"text":"Other components, p95","textPreview":"Other components, p95","textChars":21,"textLines":1,"bbox":[654,132,500,44]}
+{"kind":"textbox","id":"sh/gb2t4zmd","slide":9,"text":"Warm direct service path. Measurements exclude HTTP transport, cache hits, database startup, and concurrent load.","textPreview":"Warm direct service path. Measurements exclude HTTP transport, cache hits, database startup, and concurrent load.","textChars":113,"textLines":1,"bbox":[74,575,1120,66]}
+{"kind":"chart","id":"ch/xwv29k36","slide":9,"name":"","chartType":"bar","bbox":[66,180,500,350]}
+{"kind":"chart","id":"ch/budk7al0","slide":9,"name":"","chartType":"bar","bbox":[640,180,570,350]}
+{"kind":"notes","id":"nt/r7k8id","slide":9,"text":"Benchmark runs: search 15; parse 100; entities 100; summary 100; compliance 100. Search p50/p95 68.43/76.28 ms. Parse 0.07/0.07. Entities 0.03/0.03. Summary 0.18/0.36. Compliance 0.12/0.22."}
+{"kind":"slide","id":"sl/mlag1t","slide":10,"title":"Five-minute live demo","textShapes":21}
+{"kind":"textbox","id":"sh/2lofi5s7","slide":10,"text":"Five-minute live demo","textPreview":"Five-minute live demo","textChars":21,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/pofyt0ry","slide":10,"text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/4n6xkfqd","slide":10,"bbox":[64,102,1152,0]}
+{"kind":"shape","id":"sh/bqxgva94","slide":10,"bbox":[116,315,1040,0]}
+{"kind":"shape","id":"sh/qpofm58j","slide":10,"bbox":[112,294,24,24]}
+{"kind":"textbox","id":"sh/dsfyxkru","slide":10,"text":"0:00","textPreview":"0:00","textChars":4,"textLines":1,"bbox":[72,170,145,46]}
+{"kind":"textbox","id":"sh/cr6xofq9","slide":10,"text":"Readiness","textPreview":"Readiness","textChars":9,"textLines":1,"bbox":[72,225,145,44]}
+{"kind":"textbox","id":"sh/zuhgzu90","slide":10,"text":"Confirm API and database status","textPreview":"Confirm API and database status","textChars":31,"textLines":1,"bbox":[72,350,145,105]}
+{"kind":"shape","id":"sh/yt8zqp8f","slide":10,"bbox":[310,294,24,24]}
+{"kind":"textbox","id":"sh/gbyp4zel","slide":10,"text":"0:30","textPreview":"0:30","textChars":4,"textLines":1,"bbox":[270,170,145,46]}
+{"kind":"textbox","id":"sh/hc7qx4v6","slide":10,"text":"Parse","textPreview":"Parse","textChars":5,"textLines":1,"bbox":[270,225,145,44]}
+{"kind":"textbox","id":"sh/u9g72pwf","slide":10,"text":"Inspect filters and safe SQL parameters","textPreview":"Inspect filters and safe SQL parameters","textChars":39,"textLines":1,"bbox":[270,350,145,105]}
+{"kind":"shape","id":"sh/fap8vud0","slide":10,"bbox":[508,294,24,24]}
+{"kind":"textbox","id":"sh/ofip8zux","slide":10,"text":"1:15","textPreview":"1:15","textChars":4,"textLines":1,"bbox":[468,170,145,46]}
+{"kind":"textbox","id":"sh/pgrq14v2","slide":10,"text":"Search","textPreview":"Search","textChars":6,"textLines":1,"bbox":[468,225,145,44]}
+{"kind":"textbox","id":"sh/2dg769cr","slide":10,"text":"Return ranked Irvine listings","textPreview":"Return ranked Irvine listings","textChars":29,"textLines":1,"bbox":[468,350,145,105]}
+{"kind":"shape","id":"sh/3e98zedc","slide":10,"bbox":[706,294,24,24]}
+{"kind":"textbox","id":"sh/c3ipcjut","slide":10,"text":"2:30","textPreview":"2:30","textChars":4,"textLines":1,"bbox":[666,170,145,46]}
+{"kind":"textbox","id":"sh/d4rq5ove","slide":10,"text":"Enrich","textPreview":"Enrich","textChars":6,"textLines":1,"bbox":[666,225,145,44]}
+{"kind":"textbox","id":"sh/l07qponi","slide":10,"text":"Extract entities and summarize a remark","textPreview":"Extract entities and summarize a remark","textChars":39,"textLines":1,"bbox":[666,350,145,105]}
+{"kind":"shape","id":"sh/kzepwjmx","slide":10,"bbox":[904,294,24,24]}
+{"kind":"textbox","id":"sh/zy5one5c","slide":10,"text":"3:45","textPreview":"3:45","textChars":4,"textLines":1,"bbox":[864,170,145,46]}
+{"kind":"textbox","id":"sh/yxw7u94r","slide":10,"text":"Compliance","textPreview":"Compliance","textChars":10,"textLines":1,"bbox":[864,225,145,44]}
+{"kind":"textbox","id":"sh/9o7qtone","slide":10,"text":"Compare query and listing checks","textPreview":"Compare query and listing checks","textChars":32,"textLines":1,"bbox":[864,350,145,105]}
+{"kind":"shape","id":"sh/8nyp0jm9","slide":10,"bbox":[1102,294,24,24]}
+{"kind":"textbox","id":"sh/7mp8re5o","slide":10,"text":"4:40","textPreview":"4:40","textChars":4,"textLines":1,"bbox":[1062,170,145,46]}
+{"kind":"textbox","id":"sh/m1g7yt43","slide":10,"text":"Wrap","textPreview":"Wrap","textChars":4,"textLines":1,"bbox":[1062,225,145,44]}
+{"kind":"textbox","id":"sh/psn6h4na","slide":10,"text":"Show cache status and key result","textPreview":"Show cache status and key result","textChars":32,"textLines":1,"bbox":[1062,350,145,105]}
+{"kind":"textbox","id":"sh/orupozmp","slide":10,"text":"Demo path: Streamlit for the audience, OpenAPI docs as the fallback interface.","textPreview":"Demo path: Streamlit for the audience, OpenAPI docs as the fallback interface.","textChars":78,"textLines":1,"bbox":[74,565,1110,58]}
+{"kind":"notes","id":"nt/mlag1t","slide":10,"text":"Demo timing: 30 seconds readiness, 45 seconds parsing, 75 seconds search, 75 seconds enrichment, 55 seconds compliance, 20 seconds wrap. Keep /docs open as backup if Streamlit fails."}
+{"kind":"slide","id":"sl/mhd57n","slide":11,"title":"Demo prompts and expected results","textShapes":18}
+{"kind":"textbox","id":"sh/nqpwzmd0","slide":11,"text":"Demo prompts and expected results","textPreview":"Demo prompts and expected results","textChars":33,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/oryx8rul","slide":11,"text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/ps7e1cv6","slide":11,"bbox":[64,102,1152,0]}
+{"kind":"shape","id":"sh/elwv2xcj","slide":11,"bbox":[72,130,50,50]}
+{"kind":"textbox","id":"sh/fm5wv2d4","slide":11,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[72,130,50,50]}
+{"kind":"textbox","id":"sh/0nyd47u9","slide":11,"text":"GET /ready","textPreview":"GET /ready","textChars":10,"textLines":1,"bbox":[152,128,465,54]}
+{"kind":"textbox","id":"sh/1o7excvu","slide":11,"text":"Database status and loaded document count","textPreview":"Database status and loaded document count","textChars":41,"textLines":1,"bbox":[635,128,550,56]}
+{"kind":"shape","id":"sh/qxwvyxc7","slide":11,"bbox":[152,197,1033,0]}
+{"kind":"shape","id":"sh/ry5wr2ds","slide":11,"bbox":[72,228,50,50]}
+{"kind":"textbox","id":"sh/vm1wbu1g","slide":11,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[72,228,50,50]}
+{"kind":"textbox","id":"sh/alsvip0v","slide":11,"text":"3 bed 2 bath under 700k in Irvine","textPreview":"3 bed 2 bath under 700k in Irvine","textChars":33,"textLines":1,"bbox":[152,226,465,54]}
+{"kind":"textbox","id":"sh/xo3ed4j6","slide":11,"text":"Price, bedroom, bathroom, and city filters","textPreview":"Price, bedroom, bathroom, and city filters","textChars":42,"textLines":1,"bbox":[635,226,550,56]}
+{"kind":"shape","id":"sh/wnudkzil","slide":11,"bbox":[152,295,1033,0]}
+{"kind":"shape","id":"sh/jqlwfu1c","slide":11,"bbox":[72,326,50,50]}
+{"kind":"textbox","id":"sh/ipcvm90r","slide":11,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[72,326,50,50]}
+{"kind":"textbox","id":"sh/5s3eh4ji","slide":11,"text":"POST /search with the same query","textPreview":"POST /search with the same query","textChars":32,"textLines":1,"bbox":[152,324,465,54]}
+{"kind":"textbox","id":"sh/krudozix","slide":11,"text":"Ranked matches with scores and metadata","textPreview":"Ranked matches with scores and metadata","textChars":39,"textLines":1,"bbox":[635,324,550,56]}
+{"kind":"shape","id":"sh/zuhc3a18","slide":11,"bbox":[152,393,1033,0]}
+{"kind":"shape","id":"sh/et8va50n","slide":11,"bbox":[72,424,50,50]}
+{"kind":"textbox","id":"sh/29gzidkb","slide":11,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[72,424,50,50]}
+{"kind":"textbox","id":"sh/3apgrilg","slide":11,"text":"Updated 3 bed, 2 bath home with pool at $695k","textPreview":"Updated 3 bed, 2 bath home with pool at $695k","textChars":45,"textLines":1,"bbox":[152,422,465,54]}
+{"kind":"textbox","id":"sh/4byhkn21","slide":11,"text":"Entities followed by a two-sentence summary","textPreview":"Entities followed by a two-sentence summary","textChars":43,"textLines":1,"bbox":[635,422,550,56]}
+{"kind":"shape","id":"sh/pc7ytsjm","slide":11,"bbox":[152,491,1033,0]}
+{"kind":"shape","id":"sh/ulwzetkz","slide":11,"bbox":[72,522,50,50]}
+{"kind":"textbox","id":"sh/fmpgnylk","slide":11,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[72,522,50,50]}
+{"kind":"textbox","id":"sh/gnyhg325","slide":11,"text":"Ideal for families with children","textPreview":"Ideal for families with children","textChars":32,"textLines":1,"bbox":[152,520,465,54]}
+{"kind":"textbox","id":"sh/ho7yp83q","slide":11,"text":"Compliance flag, category, severity, and evidence","textPreview":"Compliance flag, category, severity, and evidence","textChars":49,"textLines":1,"bbox":[635,520,550,56]}
+{"kind":"textbox","id":"sh/6hwfatk3","slide":11,"text":"Fallback: use /docs to execute the same requests if the frontend is unavailable.","textPreview":"Fallback: use /docs to execute the same requests if the frontend is unavailable.","textChars":80,"textLines":1,"bbox":[152,625,1033,34]}
+{"kind":"notes","id":"nt/mhd57n","slide":11,"text":"Before presenting: start the API, confirm /ready, open the Streamlit search page, preload the query, and keep /docs open. Avoid typing long JSON live."}
+{"kind":"slide","id":"sl/n2jhex","slide":12,"title":"Deep dive: query parsing","textShapes":18}
+{"kind":"textbox","id":"sh/nulkru1c","slide":12,"text":"Deep dive: query parsing","textPreview":"Deep dive: query parsing","textChars":24,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/ovul0zix","slide":12,"text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/9w3mt4ji","slide":12,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/axc32903","slide":12,"text":"Input","textPreview":"Input","textChars":5,"textLines":1,"bbox":[76,138,180,42]}
+{"kind":"textbox","id":"sh/vyl4ve1o","slide":12,"text":"“3 bed 2 bath under 700k in Irvine with a pool”","textPreview":"“3 bed 2 bath under 700k in Irvine with a pool”","textChars":47,"textLines":1,"bbox":[76,184,470,92]}
+{"kind":"shape","id":"sh/wzel4ji9","slide":12,"bbox":[576,136,0,440]}
+{"kind":"textbox","id":"sh/x0nmxoju","slide":12,"text":"Structured output","textPreview":"Structured output","textChars":17,"textLines":1,"bbox":[620,138,300,42]}
+{"kind":"textbox","id":"sh/i1w3690z","slide":12,"text":"price_max","textPreview":"price_max","textChars":9,"textLines":1,"bbox":[620,196,230,42]}
+{"kind":"textbox","id":"sh/j254zehk","slide":12,"text":"700000","textPreview":"700000","textChars":6,"textLines":1,"bbox":[875,196,270,42]}
+{"kind":"shape","id":"sh/fqt4325w","slide":12,"bbox":[620,245,520,0]}
+{"kind":"textbox","id":"sh/upk3ux4b","slide":12,"text":"bedrooms","textPreview":"bedrooms","textChars":8,"textLines":1,"bbox":[620,261,230,42]}
+{"kind":"textbox","id":"sh/hcbm5sn2","slide":12,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[875,261,270,42]}
+{"kind":"shape","id":"sh/gb2lwnmh","slide":12,"bbox":[620,310,520,0]}
+{"kind":"textbox","id":"sh/7mt4zi50","slide":12,"text":"bathrooms","textPreview":"bathrooms","textChars":9,"textLines":1,"bbox":[620,326,230,42]}
+{"kind":"textbox","id":"sh/6l03qd4f","slide":12,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[875,326,270,42]}
+{"kind":"shape","id":"sh/tobm1sn6","slide":12,"bbox":[620,375,520,0]}
+{"kind":"textbox","id":"sh/sn2lsnml","slide":12,"text":"city","textPreview":"city","textChars":4,"textLines":1,"bbox":[620,391,230,42]}
+{"kind":"textbox","id":"sh/rid4bm54","slide":12,"text":"Irvine","textPreview":"Irvine","textChars":6,"textLines":1,"bbox":[875,391,270,42]}
+{"kind":"shape","id":"sh/qh4n2h4j","slide":12,"bbox":[620,440,520,0]}
+{"kind":"textbox","id":"sh/md87alor","slide":12,"text":"amenities","textPreview":"amenities","textChars":9,"textLines":1,"bbox":[620,456,230,42]}
+{"kind":"textbox","id":"sh/neho36pc","slide":12,"text":"pool","textPreview":"pool","textChars":4,"textLines":1,"bbox":[875,456,270,42]}
+{"kind":"textbox","id":"sh/ofqpcb6x","slide":12,"text":"Challenge","textPreview":"Challenge","textChars":9,"textLines":1,"bbox":[76,338,170,42]}
+{"kind":"textbox","id":"sh/9gzq5g7i","slide":12,"text":"Normalize compact forms such as 700k, distinguish exact room counts from minimums, and keep SQL values parameterized.","textPreview":"Normalize compact forms such as 700k, distinguish exact room counts from minimums, and keep SQL values parameterized.","textChars":117,"textLines":1,"bbox":[76,382,450,150]}
+{"kind":"textbox","id":"sh/a187elo3","slide":12,"text":"Measured result: 60/60 queries produced a filter. Exact-match correctness still needs a labeled benchmark.","textPreview":"Measured result: 60/60 queries produced a filter. Exact-match correctness still needs a labeled benchmark.","textChars":106,"textLines":1,"bbox":[76,585,1080,56]}
+{"kind":"notes","id":"nt/n2jhex","slide":12,"text":"Source: scripts/query_parser.py and scripts/main.py. Explain that to_sql returns placeholders and parameters instead of concatenating values."}
+{"kind":"slide","id":"sl/kxm74v","slide":13,"title":"Deep dive: retrieval and caching","textShapes":13}
+{"kind":"textbox","id":"sh/5cn6pkfe","slide":13,"text":"Deep dive: retrieval and caching","textPreview":"Deep dive: retrieval and caching","textChars":32,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/i9wnu5gn","slide":13,"text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/ja5onax8","slide":13,"bbox":[64,102,1152,0]}
+{"kind":"shape","id":"sh/sfep0fyp","slide":13,"bbox":[54,185,270,260]}
+{"kind":"textbox","id":"sh/tg76tkfa","slide":13,"text":"Database corpus","textPreview":"Database corpus","textChars":15,"textLines":1,"bbox":[76,215,226,54]}
+{"kind":"shape","id":"sh/6dw7ypgj","slide":13,"bbox":[82,283,214,0]}
+{"kind":"textbox","id":"sh/re5orax4","slide":13,"text":"52,742 listings in the verified load","textPreview":"52,742 listings in the verified load","textChars":36,"textLines":1,"bbox":[78,305,222,108]}
+{"kind":"shape","id":"sh/g3yp4zy1","slide":13,"bbox":[359,185,270,260]}
+{"kind":"textbox","id":"sh/1476x4f6","slide":13,"text":"Metadata gate","textPreview":"Metadata gate","textChars":13,"textLines":1,"bbox":[381,215,226,54]}
+{"kind":"shape","id":"sh/tobyhcr6","slide":13,"bbox":[387,283,214,0]}
+{"kind":"textbox","id":"sh/8n2x87al","slide":13,"text":"Price, rooms, and city remove invalid candidates","textPreview":"Price, rooms, and city remove invalid candidates","textChars":48,"textLines":1,"bbox":[383,305,222,108]}
+{"kind":"shape","id":"sh/7mtgf29g","slide":13,"bbox":[664,185,270,260]}
+{"kind":"textbox","id":"sh/6lkf6xsv","slide":13,"text":"Text ranking","textPreview":"Text ranking","textChars":12,"textLines":1,"bbox":[686,215,226,54]}
+{"kind":"shape","id":"sh/hsvylcri","slide":13,"bbox":[692,283,214,0]}
+{"kind":"textbox","id":"sh/grmxc7ax","slide":13,"text":"Token cosine similarity orders the remaining remarks","textPreview":"Token cosine similarity orders the remaining remarks","textChars":52,"textLines":1,"bbox":[688,305,222,108]}
+{"kind":"shape","id":"sh/vqtgjm9c","slide":13,"bbox":[969,185,270,260]}
+{"kind":"textbox","id":"sh/upkfahsr","slide":13,"text":"TTL cache","textPreview":"TTL cache","textChars":9,"textLines":1,"bbox":[991,215,226,54]}
+{"kind":"shape","id":"sh/xwry9sry","slide":13,"bbox":[997,283,214,0]}
+{"kind":"textbox","id":"sh/wvix0nat","slide":13,"text":"Payload hash returns repeat results without recomputation","textPreview":"Payload hash returns repeat results without recomputation","textChars":57,"textLines":1,"bbox":[993,305,222,108]}
+{"kind":"textbox","id":"sh/ofmxgni9","slide":13,"text":"Challenge","textPreview":"Challenge","textChars":9,"textLines":1,"bbox":[74,492,150,38]}
+{"kind":"textbox","id":"sh/pgvypszu","slide":13,"text":"The current ranker scans the corpus, so latency grows with record count. Cache keys include the document version to prevent stale search results after reload.","textPreview":"The current ranker scans the corpus, so latency grows with record count. Cache keys include the document version to prevent stale search ...","textChars":158,"textLines":1,"bbox":[74,530,1110,90]}
+{"kind":"textbox","id":"sh/2d4fed0j","slide":13,"text":"Local result: 68.43 ms p50 and 76.28 ms p95 over 52,742 generated records.","textPreview":"Local result: 68.43 ms p50 and 76.28 ms p95 over 52,742 generated records.","textChars":74,"textLines":1,"bbox":[74,625,1110,34]}
+{"kind":"notes","id":"nt/kxm74v","slide":13,"text":"Source: scripts/main.py search, cached_compute, TTLCache, replace_documents, and documents_version. Future semantic search should preserve the metadata-first filter path."}
+{"kind":"slide","id":"sl/1k90f3","slide":14,"title":"Deep dive: compliance tradeoffs","textShapes":11}
+{"kind":"textbox","id":"sh/w72do3el","slide":14,"text":"Deep dive: compliance tradeoffs","textPreview":"Deep dive: compliance tradeoffs","textChars":31,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/v6twfidg","slide":14,"text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/u5kvmdwv","slide":14,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/94bed8va","slide":14,"text":"Query mode","textPreview":"Query mode","textChars":10,"textLines":1,"bbox":[74,145,470,48]}
+{"kind":"textbox","id":"sh/832dk3ep","slide":14,"text":"100%","textPreview":"100%","textChars":4,"textLines":1,"bbox":[74,214,450,72]}
+{"kind":"shape","id":"sh/72twbyd4","slide":14,"bbox":[74,296,426,0]}
+{"kind":"textbox","id":"sh/m1kvitwj","slide":14,"text":"accuracy on 48 labeled queries","textPreview":"accuracy on 48 labeled queries","textChars":30,"textLines":1,"bbox":[74,310,450,64]}
+{"kind":"textbox","id":"sh/l0re9ovy","slide":14,"text":"28 risky and 20 compliant examples were classified correctly.","textPreview":"28 risky and 20 compliant examples were classified correctly.","textChars":61,"textLines":1,"bbox":[74,390,450,78]}
+{"kind":"shape","id":"sh/0zidgjed","slide":14,"bbox":[624,140,0,450]}
+{"kind":"textbox","id":"sh/6lwzadcz","slide":14,"text":"Listing mode","textPreview":"Listing mode","textChars":12,"textLines":1,"bbox":[684,145,470,48]}
+{"kind":"textbox","id":"sh/7m503itk","slide":14,"text":"71.7%","textPreview":"71.7%","textChars":5,"textLines":1,"bbox":[684,214,450,72]}
+{"kind":"shape","id":"sh/snehcnu5","slide":14,"bbox":[684,296,426,0]}
+{"kind":"textbox","id":"sh/toni58bq","slide":14,"text":"accuracy on 60 labeled listings","textPreview":"accuracy on 60 labeled listings","textChars":31,"textLines":1,"bbox":[684,310,450,64]}
+{"kind":"textbox","id":"sh/ixcz6tc3","slide":14,"text":"Precision remained 100%, but recall fell to 50%. The checker missed paraphrases and indirect protected-class references.","textPreview":"Precision remained 100%, but recall fell to 50%. The checker missed paraphrases and indirect protected-class references.","textChars":120,"textLines":1,"bbox":[684,390,450,112]}
+{"kind":"textbox","id":"sh/jyl0zyto","slide":14,"text":"Production implication: keep the checker as a review aid until listing recall improves.","textPreview":"Production implication: keep the checker as a review aid until listing recall improves.","textChars":87,"textLines":1,"bbox":[74,594,1080,54]}
+{"kind":"notes","id":"nt/1k90f3","slide":14,"text":"Compliance evaluation rerun September 11, 2026. Query confusion matrix: TP 28, FP 0, FN 0, TN 20. Listing matrix: TP 17, FP 0, FN 17, TN 26."}
+{"kind":"slide","id":"sl/v36ceq","slide":15,"title":"Production considerations","textShapes":18}
+{"kind":"textbox","id":"sh/ojy9sneh","slide":15,"text":"Production considerations","textPreview":"Production considerations","textChars":25,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/3i58jidw","slide":15,"text":"15","textPreview":"15","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/2hwrqdwb","slide":15,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/do7qpsvy","slide":15,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[76,135,70,44]}
+{"kind":"textbox","id":"sh/cny9wned","slide":15,"text":"Rate limiting","textPreview":"Rate limiting","textChars":13,"textLines":1,"bbox":[160,133,310,48]}
+{"kind":"textbox","id":"sh/bmp8nids","slide":15,"text":"Sliding one-second window permits 10 requests per second per client IP.","textPreview":"Sliding one-second window permits 10 requests per second per client IP.","textChars":71,"textLines":1,"bbox":[485,133,700,54]}
+{"kind":"shape","id":"sh/qlgrudw7","slide":15,"bbox":[160,199,1025,0]}
+{"kind":"textbox","id":"sh/lcrqtsva","slide":15,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[76,227,70,44]}
+{"kind":"textbox","id":"sh/0bi907up","slide":15,"text":"Caching","textPreview":"Caching","textChars":7,"textLines":1,"bbox":[160,225,310,48]}
+{"kind":"textbox","id":"sh/2tcje5s7","slide":15,"text":"Bounded TTL cache reduces repeat NLP work; Redis is needed for multiple workers.","textPreview":"Bounded TTL cache reduces repeat NLP work; Redis is needed for multiple workers.","textChars":80,"textLines":1,"bbox":[485,225,700,54]}
+{"kind":"shape","id":"sh/3u50nats","slide":15,"bbox":[160,291,1025,0]}
+{"kind":"textbox","id":"sh/ove1gfad","slide":15,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[76,319,70,44]}
+{"kind":"textbox","id":"sh/pwnipkby","slide":15,"text":"Database","textPreview":"Database","textChars":8,"textLines":1,"bbox":[160,317,310,48]}
+{"kind":"textbox","id":"sh/qhwji5sj","slide":15,"text":"Startup autoload and readiness state expose connection failures without hiding them.","textPreview":"Startup autoload and readiness state expose connection failures without hiding them.","textChars":84,"textLines":1,"bbox":[485,317,700,54]}
+{"kind":"shape","id":"sh/bi50rat4","slide":15,"bbox":[160,383,1025,0]}
+{"kind":"textbox","id":"sh/cje1kfap","slide":15,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[76,411,70,44]}
+{"kind":"textbox","id":"sh/dknitkra","slide":15,"text":"Observability","textPreview":"Observability","textChars":13,"textLines":1,"bbox":[160,409,310,48]}
+{"kind":"textbox","id":"sh/61sz6lsf","slide":15,"text":"Structured request logs include method, path, status, duration, client IP, and request ID.","textPreview":"Structured request logs include method, path, status, duration, client IP, and request ID.","textChars":90,"textLines":1,"bbox":[485,409,700,54]}
+{"kind":"shape","id":"sh/7m10fqtk","slide":15,"bbox":[160,475,1025,0]}
+{"kind":"textbox","id":"sh/v6hgnm9c","slide":15,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[76,503,70,44]}
+{"kind":"textbox","id":"sh/a58feh87","slide":15,"text":"Failure handling","textPreview":"Failure handling","textChars":16,"textLines":1,"bbox":[160,501,310,48]}
+{"kind":"textbox","id":"sh/xszypwri","slide":15,"text":"Thread-pool execution keeps slow NLP work off the event loop; fallbacks preserve basic service.","textPreview":"Thread-pool execution keeps slow NLP work off the event loop; fallbacks preserve basic service.","textChars":95,"textLines":1,"bbox":[485,501,700,54]}
+{"kind":"textbox","id":"sh/w7qxgrqx","slide":15,"text":"Credentials remain in environment variables, and the Docker image runs as a non-root user.","textPreview":"Credentials remain in environment variables, and the Docker image runs as a non-root user.","textChars":90,"textLines":1,"bbox":[160,617,1020,40]}
+{"kind":"notes","id":"nt/v36ceq","slide":15,"text":"Source: scripts/main.py settings, middleware, lifespan, cached_compute, and readiness route; Docker configuration reviewed in the project root."}
+{"kind":"slide","id":"sl/6btnvu","slide":16,"title":"Project learnings","textShapes":14}
+{"kind":"textbox","id":"sh/j6lwrq18","slide":16,"text":"Project learnings","textPreview":"Project learnings","textChars":17,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/k7edkv2t","slide":16,"text":"16","textPreview":"16","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/58netgje","slide":16,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/69wvmlkz","slide":16,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[78,140,72,46]}
+{"kind":"textbox","id":"sh/7a5wvq1k","slide":16,"text":"Metric definitions matter","textPreview":"Metric definitions matter","textChars":25,"textLines":1,"bbox":[165,138,390,48]}
+{"kind":"textbox","id":"sh/sbexov25","slide":16,"text":"A 100% parser result measured nonempty output, not exact filter correctness.","textPreview":"A 100% parser result measured nonempty output, not exact filter correctness.","textChars":76,"textLines":1,"bbox":[575,138,600,62]}
+{"kind":"shape","id":"sh/tcnex0ja","slide":16,"bbox":[165,217,1010,0]}
+{"kind":"textbox","id":"sh/mdsva1kf","slide":16,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[78,258,72,46]}
+{"kind":"textbox","id":"sh/ne1wj610","slide":16,"text":"Structured filters improve trust","textPreview":"Structured filters improve trust","textChars":32,"textLines":1,"bbox":[165,256,390,48]}
+{"kind":"textbox","id":"sh/zm5s7mtg","slide":16,"text":"Showing extracted constraints makes search behavior easier to inspect and debug.","textPreview":"Showing extracted constraints makes search behavior easier to inspect and debug.","textChars":80,"textLines":1,"bbox":[575,256,600,62]}
+{"kind":"shape","id":"sh/ylwrehcv","slide":16,"bbox":[165,335,1010,0]}
+{"kind":"textbox","id":"sh/lo7a9wbm","slide":16,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[78,376,72,46]}
+{"kind":"textbox","id":"sh/0ny9gru1","slide":16,"text":"Rules perform unevenly by context","textPreview":"Rules perform unevenly by context","textChars":33,"textLines":1,"bbox":[165,374,390,48]}
+{"kind":"textbox","id":"sh/by5832tk","slide":16,"text":"Compliance queries were easy for the rules, while nuanced listing language reduced recall.","textPreview":"Compliance queries were easy for the rules, while nuanced listing language reduced recall.","textChars":90,"textLines":1,"bbox":[575,374,600,62]}
+{"kind":"shape","id":"sh/qxwrahcz","slide":16,"bbox":[165,453,1010,0]}
+{"kind":"textbox","id":"sh/dknq5cba","slide":16,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[78,494,72,46]}
+{"kind":"textbox","id":"sh/cje9c7up","slide":16,"text":"Operational behavior belongs in the API","textPreview":"Operational behavior belongs in the API","textChars":39,"textLines":1,"bbox":[165,492,390,48]}
+{"kind":"textbox","id":"sh/3ul8z2t8","slide":16,"text":"Readiness, cache visibility, rate limits, and request IDs support real deployment work.","textPreview":"Readiness, cache visibility, rate limits, and request IDs support real deployment work.","textChars":87,"textLines":1,"bbox":[575,492,600,62]}
+{"kind":"notes","id":"nt/6btnvu","slide":16,"text":"Use this slide to connect technical work to engineering judgment: define metrics precisely, preserve explainability, and measure known weaknesses."}
+{"kind":"slide","id":"sl/lj03x8","slide":17,"title":"Future work","textShapes":13}
+{"kind":"textbox","id":"sh/7i94b2xw","slide":17,"text":"Future work","textPreview":"Future work","textChars":11,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/83i547yh","slide":17,"text":"17","textPreview":"17","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/94bmdsf2","slide":17,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/u5kn6xgn","slide":17,"text":"Near term","textPreview":"Near term","textChars":9,"textLines":1,"bbox":[76,132,210,48]}
+{"kind":"shape","id":"sh/v6t4f2x8","slide":17,"bbox":[286,155,55,0]}
+{"kind":"textbox","id":"sh/w72587et","slide":17,"text":"Add an exact-match parser benchmark and labeled summarization evaluation.","textPreview":"Add an exact-match parser benchmark and labeled summarization evaluation.","textChars":73,"textLines":1,"bbox":[370,129,810,58]}
+{"kind":"textbox","id":"sh/h8bmhcfe","slide":17,"text":"Retrieval","textPreview":"Retrieval","textChars":9,"textLines":1,"bbox":[76,231,210,48]}
+{"kind":"shape","id":"sh/a9g3udgj","slide":17,"bbox":[286,254,55,0]}
+{"kind":"textbox","id":"sh/bap43ix4","slide":17,"text":"Connect FAISS semantic retrieval to the database corpus and report precision at k.","textPreview":"Connect FAISS semantic retrieval to the database corpus and report precision at k.","textChars":82,"textLines":1,"bbox":[370,228,810,58]}
+{"kind":"textbox","id":"sh/n2hcz2lk","slide":17,"text":"Compliance","textPreview":"Compliance","textChars":10,"textLines":1,"bbox":[76,330,210,48]}
+{"kind":"shape","id":"sh/218b6xkz","slide":17,"bbox":[286,353,55,0]}
+{"kind":"textbox","id":"sh/p4zu1c3a","slide":17,"text":"Expand indirect language patterns, then retest listing recall without sacrificing precision.","textPreview":"Expand indirect language patterns, then retest listing recall without sacrificing precision.","textChars":92,"textLines":1,"bbox":[370,327,810,58]}
+{"kind":"textbox","id":"sh/o3qt872p","slide":17,"text":"Scale","textPreview":"Scale","textChars":5,"textLines":1,"bbox":[76,429,210,48]}
+{"kind":"shape","id":"sh/fexcvil8","slide":17,"bbox":[286,452,55,0]}
+{"kind":"textbox","id":"sh/edob2xkn","slide":17,"text":"Move cache and rate-limit state to Redis and load test multiple API workers.","textPreview":"Move cache and rate-limit state to Redis and load test multiple API workers.","textChars":76,"textLines":1,"bbox":[370,426,810,58]}
+{"kind":"textbox","id":"sh/10fuxs3e","slide":17,"text":"Security","textPreview":"Security","textChars":8,"textLines":1,"bbox":[76,528,210,48]}
+{"kind":"shape","id":"sh/0z6t4n2t","slide":17,"bbox":[286,551,55,0]}
+{"kind":"textbox","id":"sh/raxcrilc","slide":17,"text":"Add authentication for document reload and cache administration routes.","textPreview":"Add authentication for document reload and cache administration routes.","textChars":71,"textLines":1,"bbox":[370,525,810,58]}
+{"kind":"textbox","id":"sh/q9obydkr","slide":17,"text":"Highest-value next measurement: end-to-end search relevance on real user queries.","textPreview":"Highest-value next measurement: end-to-end search relevance on real user queries.","textChars":81,"textLines":1,"bbox":[76,625,1100,34]}
+{"kind":"notes","id":"nt/lj03x8","slide":17,"text":"Prioritize measurement gaps before expanding model complexity. Search relevance and summarization quality currently lack labeled benchmarks."}
+{"kind":"slide","id":"sl/m8iweo","slide":18,"title":"Technical Q&A preparation","textShapes":13}
+{"kind":"textbox","id":"sh/hkr2pkvi","slide":18,"text":"Technical Q&A preparation","textPreview":"Technical Q&A preparation","textChars":25,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/uh03e5wr","slide":18,"text":"18","textPreview":"18","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/vi9knadc","slide":18,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/8vylcfel","slide":18,"text":"Why rules instead of an LLM?","textPreview":"Why rules instead of an LLM?","textChars":28,"textLines":1,"bbox":[72,124,400,58]}
+{"kind":"textbox","id":"sh/9wr2l0v6","slide":18,"text":"Rules provide deterministic behavior, low latency, and visible evidence. They also establish a baseline for later model comparison.","textPreview":"Rules provide deterministic behavior, low latency, and visible evidence. They also establish a baseline for later model comparison.","textChars":131,"textLines":1,"bbox":[495,123,700,68]}
+{"kind":"shape","id":"sh/mtg3a5wv","slide":18,"bbox":[72,202,1123,0]}
+{"kind":"textbox","id":"sh/7upkjax0","slide":18,"text":"What limits search quality?","textPreview":"What limits search quality?","textChars":27,"textLines":1,"bbox":[72,228,400,58]}
+{"kind":"textbox","id":"sh/0ryl8vep","slide":18,"text":"The API currently uses token similarity after metadata filtering. A labeled relevance set and semantic index are the next steps.","textPreview":"The API currently uses token similarity after metadata filtering. A labeled relevance set and semantic index are the next steps.","textChars":128,"textLines":1,"bbox":[495,227,700,68]}
+{"kind":"shape","id":"sh/ls72h0fa","slide":18,"bbox":[72,306,1123,0]}
+{"kind":"textbox","id":"sh/hwva503q","slide":18,"text":"Why is compliance listing recall low?","textPreview":"Why is compliance listing recall low?","textChars":37,"textLines":1,"bbox":[72,332,400,58]}
+{"kind":"textbox","id":"sh/wvmtwv25","slide":18,"text":"Listings use indirect and contextual language that exact patterns miss. The test found 17 false negatives and no false positives.","textPreview":"Listings use indirect and contextual language that exact patterns miss. The test found 17 false negatives and no false positives.","textChars":129,"textLines":1,"bbox":[495,331,700,68]}
+{"kind":"shape","id":"sh/vuds3qlk","slide":18,"bbox":[72,410,1123,0]}
+{"kind":"textbox","id":"sh/ut4bulkz","slide":18,"text":"Will the rate limit work with multiple workers?","textPreview":"Will the rate limit work with multiple workers?","textChars":47,"textLines":1,"bbox":[72,436,400,58]}
+{"kind":"textbox","id":"sh/98va1g3u","slide":18,"text":"Each worker has local state today. Redis or an API gateway should enforce a shared production limit.","textPreview":"Each worker has local state today. Redis or an API gateway should enforce a shared production limit.","textChars":100,"textLines":1,"bbox":[495,435,700,68]}
+{"kind":"shape","id":"sh/87mtsb29","slide":18,"bbox":[72,514,1123,0]}
+{"kind":"textbox","id":"sh/76dsz6lo","slide":18,"text":"How do you prevent stale cached search results?","textPreview":"How do you prevent stale cached search results?","textChars":47,"textLines":1,"bbox":[72,540,400,58]}
+{"kind":"textbox","id":"sh/m54rqlk3","slide":18,"text":"The document version forms part of each search cache key, and reload operations clear cached entries.","textPreview":"The document version forms part of each search cache key, and reload operations clear cached entries.","textChars":101,"textLines":1,"bbox":[495,539,700,68]}
+{"kind":"textbox","id":"sh/l4baxg3i","slide":18,"text":"Closing point: the platform demonstrates an end-to-end NLP product and makes its current measurement gaps explicit.","textPreview":"Closing point: the platform demonstrates an end-to-end NLP product and makes its current measurement gaps explicit.","textChars":115,"textLines":1,"bbox":[72,632,1120,32]}
+{"kind":"notes","id":"nt/m8iweo","slide":18,"text":"Additional questions to prepare for: database schema mapping, cache invalidation, CORS configuration, input limits, SQL injection protection, and how to build a human-reviewed compliance workflow."}

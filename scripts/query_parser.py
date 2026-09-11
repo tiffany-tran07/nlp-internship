@@ -54,7 +54,12 @@ class QueryParser:
 
     def _load_cities(self, listings_path):
         """
-        Load every city from the full raw dataset.
+        Load every city from the listings dataset.
+
+        Raw MLS exports use ``L_City`` while the processed corpus uses the
+        normalized ``city`` column.  Accept both schemas so configuring
+        ``NLP_LISTINGS_PATH`` to the processed corpus does not disable city
+        extraction.
 
         Dictionary format:
             {
@@ -65,14 +70,18 @@ class QueryParser:
         """
         df = pd.read_csv(listings_path)
 
-        if "L_City" not in df.columns:
+        city_column = next(
+            (column for column in ("L_City", "city") if column in df.columns),
+            None,
+        )
+        if city_column is None:
             raise ValueError(
-                f"'L_City' column not found in {listings_path}"
+                f"Neither 'L_City' nor 'city' column found in {listings_path}"
             )
 
         cities = {}
 
-        for city in df["L_City"].dropna().unique():
+        for city in df[city_column].dropna().unique():
             original = str(city).strip()
 
             if not original:
@@ -125,8 +134,14 @@ class QueryParser:
                 if not canonical:
                     continue
 
-                term_lookup[canonical] = canonical
-                category_lookup[canonical] = category
+                # Do not overwrite an existing alias mapping. The taxonomy
+                # contains a few redundant entries where an alias of a broad
+                # canonical term is also listed later as its own term (for
+                # example, "solar panels" -> "solar" and
+                # "three car garage" -> "3-car garage"). Keeping the first
+                # alias mapping makes parser output consistently canonical.
+                term_lookup.setdefault(canonical, canonical)
+                category_lookup.setdefault(canonical, category)
 
                 for alias in entry.get("aliases", []):
 
@@ -252,15 +267,46 @@ class QueryParser:
         # BETWEEN PRICE RANGE
         # ---------------------------------------------
 
-        match = re.search(
-            r"\bbetween\s+"
-            r"\$?([\d,]+(?:\.\d+)?)\s*([km])?"
-            r"\s+(?:and|to)\s+"
-            r"\$?([\d,]+(?:\.\d+)?)\s*([km])?"
-            r"\b",
-            query,
-            re.I,
-        )
+        range_patterns = [
+            (
+                r"\bbetween\s+"
+                r"\$?(-?[\d,]+(?:\.\d+)?)\s*([km])?"
+                r"\s+(?:and|to)\s+"
+                r"\$?(-?[\d,]+(?:\.\d+)?)\s*([km])?"
+                r"\b"
+            ),
+            (
+                r"(?<!\w)(?:from\s+)?"
+                r"\$?(-?[\d,]+(?:\.\d+)?)\s*([km])?"
+                r"\s*(?:-|–|—|to)\s*"
+                r"\$?(-?[\d,]+(?:\.\d+)?)\s*([km])?"
+                r"\b"
+            ),
+        ]
+
+        match = None
+
+        for pattern in range_patterns:
+            candidate = re.search(pattern, query, re.I)
+
+            if not candidate:
+                continue
+
+            full_match = candidate.group(0)
+            has_price_context = (
+                "$" in full_match
+                or candidate.group(2)
+                or candidate.group(4)
+                or re.search(
+                    r"\b(?:price|budget|dollars?)\b",
+                    full_match,
+                    re.I,
+                )
+            )
+
+            if has_price_context:
+                match = candidate
+                break
 
         if match:
 
@@ -270,44 +316,28 @@ class QueryParser:
             high_digits = match.group(3)
             high_suffix = match.group(4) or ""
 
-            # Require clear price context.
-            full_match = match.group(0)
-
-            has_price_context = (
-                "$" in full_match
-                or low_suffix
-                or high_suffix
-                or re.search(
-                    r"\b(?:price|budget|dollars?)\b",
-                    full_match,
-                    re.I,
+            low = self._validate_price(
+                self._parse_number(
+                    low_digits,
+                    low_suffix,
                 )
             )
 
-            if has_price_context:
+            high = self._validate_price(
+                self._parse_number(
+                    high_digits,
+                    high_suffix,
+                )
+            )
 
-                low = self._validate_price(
-                    self._parse_number(
-                        low_digits,
-                        low_suffix,
-                    )
+            if low > high:
+                raise ValueError(
+                    "Minimum price cannot exceed "
+                    "maximum price."
                 )
 
-                high = self._validate_price(
-                    self._parse_number(
-                        high_digits,
-                        high_suffix,
-                    )
-                )
-
-                if low > high:
-                    raise ValueError(
-                        "Minimum price cannot exceed "
-                        "maximum price."
-                    )
-
-                filters["price_min"] = low
-                filters["price_max"] = high
+            filters["price_min"] = low
+            filters["price_max"] = high
 
         # ---------------------------------------------
         # MAXIMUM PRICE
@@ -318,14 +348,14 @@ class QueryParser:
             (
                 r"\b(?:under|below|less than|up to|max(?:imum)?)"
                 r"\s+\$"
-                r"([\d,]+(?:\.\d+)?)\s*([km]?)\b"
+                r"(-?[\d,]+(?:\.\d+)?)\s*([km]?)\b"
             ),
 
             # under 700k / below 1.2m
             (
                 r"\b(?:under|below|less than|up to|max(?:imum)?)"
                 r"\s+"
-                r"([\d,]+(?:\.\d+)?)\s*([km])\b"
+                r"(-?[\d,]+(?:\.\d+)?)\s*([km])\b"
             ),
 
             # budget under 700000
@@ -334,7 +364,7 @@ class QueryParser:
                 r"(?:\s+is)?\s+"
                 r"(?:under|below|less than|up to|max(?:imum)?)"
                 r"\s+\$?"
-                r"([\d,]+(?:\.\d+)?)\s*([km]?)\b"
+                r"(-?[\d,]+(?:\.\d+)?)\s*([km]?)\b"
             ),
         ]
 
@@ -369,14 +399,14 @@ class QueryParser:
             (
                 r"\b(?:over|above|more than|at least|min(?:imum)?)"
                 r"\s+\$"
-                r"([\d,]+(?:\.\d+)?)\s*([km]?)\b"
+                r"(-?[\d,]+(?:\.\d+)?)\s*([km]?)\b"
             ),
 
             # over 700k / above 1m
             (
                 r"\b(?:over|above|more than|at least|min(?:imum)?)"
                 r"\s+"
-                r"([\d,]+(?:\.\d+)?)\s*([km])\b"
+                r"(-?[\d,]+(?:\.\d+)?)\s*([km])\b"
             ),
 
             # price above 700000
@@ -385,7 +415,7 @@ class QueryParser:
                 r"(?:\s+is)?\s+"
                 r"(?:over|above|more than|at least|min(?:imum)?)"
                 r"\s+\$?"
-                r"([\d,]+(?:\.\d+)?)\s*([km]?)\b"
+                r"(-?[\d,]+(?:\.\d+)?)\s*([km]?)\b"
             ),
         ]
 
@@ -416,6 +446,33 @@ class QueryParser:
     # =================================================
 
     def _extract_bedrooms(self, query, filters):
+
+        # between 2 and 4 bedrooms / 2-4 bedrooms
+        match = re.search(
+            r"\b(?:between\s+|from\s+)?(\d+)\s*"
+            r"(?:and|to|-|–|—)\s*(\d+)\s*"
+            r"(?:bed|beds|bedroom|bedrooms|br)\b",
+            query,
+            re.I,
+        )
+
+        if match:
+            minimum = self._validate_bedrooms(
+                int(match.group(1))
+            )
+            maximum = self._validate_bedrooms(
+                int(match.group(2))
+            )
+
+            if minimum > maximum:
+                raise ValueError(
+                    "Minimum bedrooms cannot exceed "
+                    "maximum bedrooms."
+                )
+
+            filters["bedrooms_min"] = minimum
+            filters["bedrooms_max"] = maximum
+            return
 
         # 3+ bedrooms
         match = re.search(
@@ -497,6 +554,33 @@ class QueryParser:
     def _extract_bathrooms(self, query, filters):
 
         number = r"\d+(?:\.\d+)?"
+
+        # between 1.5 and 3 bathrooms / 1.5-3 baths
+        match = re.search(
+            rf"\b(?:between\s+|from\s+)?({number})\s*"
+            rf"(?:and|to|-|–|—)\s*({number})\s*"
+            r"(?:bath|baths|bathroom|bathrooms|ba)\b",
+            query,
+            re.I,
+        )
+
+        if match:
+            minimum = self._validate_bathrooms(
+                float(match.group(1))
+            )
+            maximum = self._validate_bathrooms(
+                float(match.group(2))
+            )
+
+            if minimum > maximum:
+                raise ValueError(
+                    "Minimum bathrooms cannot exceed "
+                    "maximum bathrooms."
+                )
+
+            filters["bathrooms_min"] = minimum
+            filters["bathrooms_max"] = maximum
+            return
 
         # 2+ baths
         match = re.search(
@@ -613,6 +697,62 @@ class QueryParser:
                 )
 
                 return
+
+        # Preserve an unrecognized city candidate so SchemaValidator can
+        # report it instead of silently accepting a query with no city
+        # filter. Known cities above always win and are canonicalized.
+        location_match = re.search(
+            r"\b(?:in|around|within)\s+(.+)$",
+            query,
+            re.I,
+        )
+
+        if not location_match:
+            return
+
+        tail = location_match.group(1).strip()
+        stop_positions = []
+        stop_patterns = [
+            r"[,;]",
+            r"\s+\b(?:with|without|near|under|over|below|above)\b",
+            r"\s+\b(?:at least|up to|between|no more than)\b",
+            r"\s+\b(?:on the water|pet friendly|new construction)\b",
+            r"\s+\d+(?:\.\d+)?\s*(?:bed|bath)\w*\b",
+        ]
+
+        for pattern in stop_patterns:
+            stop = re.search(pattern, tail, re.I)
+            if stop:
+                stop_positions.append(stop.start())
+
+        for phrase in self.taxonomy_terms:
+            stop = re.search(
+                r"(?<!\w)" + re.escape(phrase) + r"(?!\w)",
+                tail,
+                re.I,
+            )
+            if stop and stop.start() > 0:
+                stop_positions.append(stop.start())
+
+        if stop_positions:
+            tail = tail[:min(stop_positions)]
+
+        candidate = re.sub(
+            r"\s+(?:area|region)$",
+            "",
+            tail.strip(),
+            flags=re.I,
+        )
+
+        if (
+            candidate
+            and re.fullmatch(
+                r"[A-Za-z][A-Za-z.\-']*"
+                r"(?:\s+[A-Za-z][A-Za-z.\-']*){0,4}",
+                candidate,
+            )
+        ):
+            filters["city"] = candidate
 
     # =================================================
     # TAXONOMY / AMENITIES

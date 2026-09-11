@@ -6,17 +6,17 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+# Create the runtime user before copying application files so Docker can set
+# ownership during COPY instead of recursively rewriting the entire layer.
+RUN useradd --create-home --uid 10001 api
+
 # Install dependencies first so Docker can cache this layer.
 COPY requirements.txt /app/requirements.txt
 
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy the entire project into /app.
-COPY . /app
-
-# Create non-root user.
-RUN useradd --create-home --uid 10001 api \
-    && chown -R api:api /app
+# Copy the project with final runtime ownership.
+COPY --chown=api:api . /app
 
 USER api
 

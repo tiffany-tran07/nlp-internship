@@ -41,6 +41,7 @@ class SchemaValidator:
 
         self.valid_taxonomy_terms = self._load_valid_taxonomy_terms()
         self.term_to_category = self._build_term_to_category()
+        self.term_to_canonical = self._build_term_to_canonical()
 
     # -------------------------------------------------
     # DATA LOADING
@@ -48,20 +49,25 @@ class SchemaValidator:
 
     def _load_valid_cities(self, listings_path):
         """
-        Load cities from the full raw listing dataset.
+        Load cities from the listings dataset.
 
         Cities are stored lowercase for case-insensitive validation.
+        Support both raw ``L_City`` and processed ``city`` schemas.
         """
         df = pd.read_csv(listings_path)
 
-        if "L_City" not in df.columns:
+        city_column = next(
+            (column for column in ("L_City", "city") if column in df.columns),
+            None,
+        )
+        if city_column is None:
             raise ValueError(
-                f"'L_City' column not found in {listings_path}"
+                f"Neither 'L_City' nor 'city' column found in {listings_path}"
             )
 
         return {
             self._normalize_text(city)
-            for city in df["L_City"].dropna()
+            for city in df[city_column].dropna()
             if str(city).strip()
         }
 
@@ -184,6 +190,31 @@ class SchemaValidator:
 
         return lookup
 
+    def _build_term_to_canonical(self):
+        """Map taxonomy aliases and duplicate terms to one canonical term."""
+        lookup = {}
+
+        for entries in self.taxonomy["categories"].values():
+            if not isinstance(entries, list):
+                continue
+
+            for entry in entries:
+                if not isinstance(entry, dict):
+                    continue
+
+                term = entry.get("term")
+                if not isinstance(term, str) or not term.strip():
+                    continue
+
+                canonical = self._normalize_text(term)
+                lookup.setdefault(canonical, canonical)
+
+                for alias in entry.get("aliases", []):
+                    if isinstance(alias, str) and alias.strip():
+                        lookup[self._normalize_text(alias)] = canonical
+
+        return lookup
+
     def get_taxonomy_category(self, term):
         """
         Return the category for a taxonomy term or alias.
@@ -218,6 +249,7 @@ class SchemaValidator:
         maximum,
         label,
         errors,
+        integer_only=False,
     ):
         if key not in filters:
             return
@@ -235,6 +267,11 @@ class SchemaValidator:
             errors.append(
                 f"{label} {value} must be between "
                 f"{minimum} and {maximum}"
+            )
+
+        if integer_only and not float(value).is_integer():
+            errors.append(
+                f"{key} must be a whole number"
             )
 
     def _validate_range(
@@ -400,6 +437,7 @@ class SchemaValidator:
                 self.MAX_BEDROOMS,
                 "Bedroom count",
                 errors,
+                integer_only=True,
             )
 
         self._validate_range(
@@ -533,13 +571,19 @@ class SchemaValidator:
         ):
 
             required_normalized = {
-                self._normalize_text(item)
+                self.term_to_canonical.get(
+                    self._normalize_text(item),
+                    self._normalize_text(item),
+                )
                 for item in required
                 if isinstance(item, str)
             }
 
             excluded_normalized = {
-                self._normalize_text(item)
+                self.term_to_canonical.get(
+                    self._normalize_text(item),
+                    self._normalize_text(item),
+                )
                 for item in excluded
                 if isinstance(item, str)
             }

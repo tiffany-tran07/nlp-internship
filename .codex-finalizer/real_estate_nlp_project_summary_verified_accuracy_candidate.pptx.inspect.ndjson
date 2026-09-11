@@ -1,0 +1,225 @@
+{"kind":"deck","id":"pr/t5nkva","name":"Deck"}
+{"kind":"layout","layoutId":"e5d1446e-21c4-494a-b688-a010dbb619ab","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"86ab9bbc-d6b7-4342-8e96-0392a1fda458","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/hyb9sa","slide":1,"title":"NLP","textShapes":5}
+{"kind":"textbox","id":"sh/svulsb6p","slide":1,"text":"NLP","textPreview":"NLP","textChars":3,"textLines":1,"bbox":[760,55,440,220]}
+{"kind":"shape","id":"sh/ru1kj6pk","slide":1,"bbox":[72,128,72,8]}
+{"kind":"textbox","id":"sh/69s3q18z","slide":1,"text":"Real Estate NLP Platform","textPreview":"Real Estate NLP Platform","textChars":24,"textLines":1,"bbox":[72,170,850,120]}
+{"kind":"textbox","id":"sh/58j2hw7e","slide":1,"text":"Project summary","textPreview":"Project summary","textChars":15,"textLines":1,"bbox":[74,304,480,54]}
+{"kind":"textbox","id":"sh/47a1obqt","slide":1,"text":"Natural-language property search backed by MySQL and exposed through a production FastAPI service","textPreview":"Natural-language property search backed by MySQL and exposed through a production FastAPI service","textChars":97,"textLines":1,"bbox":[74,394,730,105]}
+{"kind":"textbox","id":"sh/j61kf6p8","slide":1,"text":"NLP Internship  |  September 2026","textPreview":"NLP Internship  |  September 2026","textChars":33,"textLines":1,"bbox":[74,624,520,36]}
+{"kind":"notes","id":"nt/hyb9sa","slide":1,"text":"Internal project sources: scripts/main.py; scripts/frontend/search.py; scripts/query_parser.py"}
+{"kind":"slide","id":"sl/lu4fjg","slide":2,"title":"Project scope","textShapes":10}
+{"kind":"textbox","id":"sh/ovi9kfep","slide":2,"text":"Project scope","textPreview":"Project scope","textChars":13,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/nu98rux4","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/2tgripwj","slide":2,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/1s7qpkfy","slide":2,"text":"The project turns free-form real estate language into searchable, structured, and reviewable information.","textPreview":"The project turns free-form real estate language into searchable, structured, and reviewable information.","textChars":105,"textLines":1,"bbox":[64,130,1110,72]}
+{"kind":"textbox","id":"sh/gry9gfed","slide":2,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[76,262,330,96]}
+{"kind":"shape","id":"sh/fqp8nax8","slide":2,"bbox":[76,372,300,0]}
+{"kind":"textbox","id":"sh/epgre5wn","slide":2,"text":"core NLP capabilities","textPreview":"core NLP capabilities","textChars":21,"textLines":1,"bbox":[76,392,310,70]}
+{"kind":"textbox","id":"sh/to7ql0f2","slide":2,"text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[471,262,330,96]}
+{"kind":"shape","id":"sh/sny9cveh","slide":2,"bbox":[471,372,300,0]}
+{"kind":"textbox","id":"sh/6t4f65gj","slide":2,"text":"application routes","textPreview":"application routes","textChars":18,"textLines":1,"bbox":[471,392,310,70]}
+{"kind":"textbox","id":"sh/7uxgfah4","slide":2,"text":"52,742","textPreview":"52,742","textChars":6,"textLines":1,"bbox":[866,262,330,96]}
+{"kind":"shape","id":"sh/8v6x8fyp","slide":2,"bbox":[866,372,300,0]}
+{"kind":"textbox","id":"sh/twfyhkza","slide":2,"text":"listings loaded in verification","textPreview":"listings loaded in verification","textChars":31,"textLines":1,"bbox":[866,392,310,70]}
+{"kind":"textbox","id":"sh/y54f2lgn","slide":2,"text":"Built as a complete path from data preparation and taxonomy work to an API, database integration, and a Streamlit search interface.","textPreview":"Built as a complete path from data preparation and taxonomy work to an API, database integration, and a Streamlit search interface.","textChars":131,"textLines":1,"bbox":[76,548,1090,72]}
+{"kind":"notes","id":"nt/lu4fjg","slide":2,"text":"Internal project sources: scripts/*.py; scripts/main.py route definitions; verified database load on 2026-08-31"}
+{"kind":"slide","id":"sl/y4dz48","slide":3,"title":"System architecture","textShapes":14}
+{"kind":"textbox","id":"sh/n21kbmdo","slide":3,"text":"System architecture","textPreview":"System architecture","textChars":19,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/o3a1k7u9","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/p4j2dcvu","slide":3,"bbox":[64,102,1152,0]}
+{"kind":"shape","id":"sh/a5cjmhcz","slide":3,"bbox":[58,202,225,310]}
+{"kind":"textbox","id":"sh/b6lkfmdk","slide":3,"text":"User experience","textPreview":"User experience","textChars":15,"textLines":1,"bbox":[78,226,185,54]}
+{"kind":"shape","id":"sh/w7u1oru5","slide":3,"bbox":[86,295,169,0]}
+{"kind":"textbox","id":"sh/x832hwvq","slide":3,"text":"Streamlit search\nOpenAPI docs","textPreview":"Streamlit search | OpenAPI docs","textChars":29,"textLines":2,"bbox":[80,315,181,150]}
+{"kind":"textbox","id":"sh/y9cjq1cb","slide":3,"text":"›","textPreview":"›","textChars":1,"textLines":1,"bbox":[291,310,34,70]}
+{"kind":"shape","id":"sh/jalkj6tw","slide":3,"bbox":[332,202,248,310]}
+{"kind":"textbox","id":"sh/fy5cnedk","slide":3,"text":"FastAPI service","textPreview":"FastAPI service","textChars":15,"textLines":1,"bbox":[352,226,208,54]}
+{"kind":"shape","id":"sh/exwbetwz","slide":3,"bbox":[360,295,192,0]}
+{"kind":"textbox","id":"sh/10nupovq","slide":3,"text":"Validation\nRouting\nMiddleware","textPreview":"Validation | Routing | Middleware","textChars":29,"textLines":3,"bbox":[354,315,204,150]}
+{"kind":"textbox","id":"sh/0zetgje5","slide":3,"text":"›","textPreview":"›","textChars":1,"textLines":1,"bbox":[588,310,34,70]}
+{"kind":"shape","id":"sh/ralsjedo","slide":3,"bbox":[629,202,280,310]}
+{"kind":"textbox","id":"sh/q9cba9w3","slide":3,"text":"NLP services","textPreview":"NLP services","textChars":12,"textLines":1,"bbox":[649,226,240,54]}
+{"kind":"shape","id":"sh/dw3ulove","slide":3,"bbox":[657,295,224,0]}
+{"kind":"textbox","id":"sh/sbutcje9","slide":3,"text":"Parse  |  Extract\nSearch  |  Summarize\nCompliance","textPreview":"Parse  |  Extract | Search  |  Summarize | Compliance","textChars":49,"textLines":3,"bbox":[651,315,236,150]}
+{"kind":"textbox","id":"sh/b6pcvyds","slide":3,"text":"›","textPreview":"›","textChars":1,"textLines":1,"bbox":[917,310,34,70]}
+{"kind":"shape","id":"sh/a5gbmdw7","slide":3,"bbox":[958,202,264,310]}
+{"kind":"textbox","id":"sh/m10fexgf","slide":3,"text":"Data layer","textPreview":"Data layer","textChars":10,"textLines":1,"bbox":[978,226,224,54]}
+{"kind":"shape","id":"sh/7m9wn2x0","slide":3,"bbox":[986,295,208,0]}
+{"kind":"textbox","id":"sh/8n2xg7yl","slide":3,"text":"MySQL listings\nTTL response cache","textPreview":"MySQL listings | TTL response cache","textChars":33,"textLines":2,"bbox":[980,315,220,150]}
+{"kind":"textbox","id":"sh/9obepcf6","slide":3,"text":"Database loading runs during API startup. The NLP layer stays available with conservative fallbacks when optional taxonomy resources are absent.","textPreview":"Database loading runs during API startup. The NLP layer stays available with conservative fallbacks when optional taxonomy resources are ...","textChars":144,"textLines":1,"bbox":[72,574,1120,66]}
+{"kind":"notes","id":"nt/y4dz48","slide":3,"text":"Internal project sources: scripts/main.py NLPServices, lifespan, middleware, and routes; scripts/frontend/search.py"}
+{"kind":"slide","id":"sl/kxjv18","slide":4,"title":"NLP capabilities","textShapes":17}
+{"kind":"textbox","id":"sh/4vy5knm9","slide":4,"text":"NLP capabilities","textPreview":"NLP capabilities","textChars":16,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/3uporilo","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/itgnid43","slide":4,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/dkr6xs3q","slide":4,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[72,132,60,48]}
+{"kind":"textbox","id":"sh/sji5onm5","slide":4,"text":"Search","textPreview":"Search","textChars":6,"textLines":1,"bbox":[150,130,250,50]}
+{"kind":"textbox","id":"sh/ri9ovil0","slide":4,"text":"Ranks listing remarks by token similarity, then applies numeric and city filters.","textPreview":"Ranks listing remarks by token similarity, then applies numeric and city filters.","textChars":81,"textLines":1,"bbox":[405,130,790,60]}
+{"kind":"shape","id":"sh/qhgnmd4f","slide":4,"bbox":[150,204,1040,0]}
+{"kind":"textbox","id":"sh/1or61c32","slide":4,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[72,235,60,48]}
+{"kind":"textbox","id":"sh/0nips72h","slide":4,"text":"Query parsing","textPreview":"Query parsing","textChars":13,"textLines":1,"bbox":[150,233,250,50]}
+{"kind":"textbox","id":"sh/25ob6pcz","slide":4,"text":"Extracts price ranges, bedrooms, bathrooms, cities, amenities, and exclusions.","textPreview":"Extracts price ranges, bedrooms, bathrooms, cities, amenities, and exclusions.","textChars":78,"textLines":1,"bbox":[405,233,790,60]}
+{"kind":"shape","id":"sh/36xsfutk","slide":4,"bbox":[150,307,1040,0]}
+{"kind":"textbox","id":"sh/47qt8zu5","slide":4,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[72,338,60,48]}
+{"kind":"textbox","id":"sh/p8zah4bq","slide":4,"text":"Entity extraction","textPreview":"Entity extraction","textChars":17,"textLines":1,"bbox":[150,336,250,50]}
+{"kind":"textbox","id":"sh/q98ba9cv","slide":4,"text":"Identifies structured facts such as price, square footage, room counts, and taxonomy terms.","textPreview":"Identifies structured facts such as price, square footage, room counts, and taxonomy terms.","textChars":91,"textLines":1,"bbox":[405,336,790,60]}
+{"kind":"shape","id":"sh/ruhsjutg","slide":4,"bbox":[150,410,1040,0]}
+{"kind":"textbox","id":"sh/cvqtczu1","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[72,441,60,48]}
+{"kind":"textbox","id":"sh/dwzal4bm","slide":4,"text":"Summarization","textPreview":"Summarization","textChars":13,"textLines":1,"bbox":[150,439,250,50]}
+{"kind":"textbox","id":"sh/6d4ry5cr","slide":4,"text":"Selects the most informative listing sentences using entity and position signals.","textPreview":"Selects the most informative listing sentences using entity and position signals.","textChars":81,"textLines":1,"bbox":[405,439,790,60]}
+{"kind":"shape","id":"sh/7yds7atc","slide":4,"bbox":[150,513,1040,0]}
+{"kind":"textbox","id":"sh/vit8z694","slide":4,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[72,544,60,48]}
+{"kind":"textbox","id":"sh/ahk761sj","slide":4,"text":"Compliance checking","textPreview":"Compliance checking","textChars":19,"textLines":1,"bbox":[150,542,250,50]}
+{"kind":"textbox","id":"sh/x4bq1gra","slide":4,"text":"Flags fair-housing risks in listing language and user search requests.","textPreview":"Flags fair-housing risks in listing language and user search requests.","textChars":70,"textLines":1,"bbox":[405,542,790,60]}
+{"kind":"notes","id":"nt/kxjv18","slide":4,"text":"Internal project sources: scripts/main.py; scripts/query_parser.py; scripts/entity_extractor.py; scripts/listing_summarizer.py; scripts/compliance_checker.py"}
+{"kind":"slide","id":"sl/jytv3j","slide":5,"title":"Verified accuracy metrics","textShapes":26}
+{"kind":"textbox","id":"sh/cfeh0jyp","slide":5,"text":"Verified accuracy metrics","textPreview":"Verified accuracy metrics","textChars":25,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/be5grex4","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/qtwzy9gj","slide":5,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/psnyp4fy","slide":5,"text":"100%","textPreview":"100%","textChars":4,"textLines":1,"bbox":[72,126,155,40]}
+{"kind":"textbox","id":"sh/orehwzyd","slide":5,"text":"ACCURACY","textPreview":"ACCURACY","textChars":8,"textLines":1,"bbox":[72,165,155,20]}
+{"kind":"textbox","id":"sh/3q5gnuxs","slide":5,"text":"Intent classifier","textPreview":"Intent classifier","textChars":17,"textLines":1,"bbox":[248,124,350,50]}
+{"kind":"textbox","id":"sh/2pwfupgn","slide":5,"text":"40 held-out queries after training on 160 labeled queries","textPreview":"40 held-out queries after training on 160 labeled queries","textChars":57,"textLines":1,"bbox":[625,124,570,50]}
+{"kind":"shape","id":"sh/9ory18fi","slide":5,"bbox":[248,191,947,0]}
+{"kind":"textbox","id":"sh/8nih83yx","slide":5,"text":"100%","textPreview":"100%","textChars":4,"textLines":1,"bbox":[72,213,155,40]}
+{"kind":"textbox","id":"sh/2h4r6lg7","slide":5,"text":"ACCURACY","textPreview":"ACCURACY","textChars":8,"textLines":1,"bbox":[72,252,155,20]}
+{"kind":"textbox","id":"sh/3idszqxs","slide":5,"text":"Structured field preservation","textPreview":"Structured field preservation","textChars":29,"textLines":1,"bbox":[248,211,350,50]}
+{"kind":"textbox","id":"sh/4jm98vyd","slide":5,"text":"4,000 checks across 1,000 listings","textPreview":"4,000 checks across 1,000 listings","textChars":34,"textLines":1,"bbox":[625,211,570,50]}
+{"kind":"shape","id":"sh/pkfa10fy","slide":5,"bbox":[248,278,947,0]}
+{"kind":"textbox","id":"sh/ut4r2lgb","slide":5,"text":"100%","textPreview":"100%","textChars":4,"textLines":1,"bbox":[72,300,155,40]}
+{"kind":"textbox","id":"sh/fed8v6xw","slide":5,"text":"COVERAGE","textPreview":"COVERAGE","textChars":8,"textLines":1,"bbox":[72,339,155,20]}
+{"kind":"textbox","id":"sh/gfm94byh","slide":5,"text":"Query parser","textPreview":"Query parser","textChars":12,"textLines":1,"bbox":[248,298,350,50]}
+{"kind":"textbox","id":"sh/hgvaxgf2","slide":5,"text":"60 of 60 on-topic queries produced at least one filter","textPreview":"60 of 60 on-topic queries produced at least one filter","textChars":54,"textLines":1,"bbox":[625,298,570,50]}
+{"kind":"shape","id":"sh/e9ore5gf","slide":5,"bbox":[248,365,947,0]}
+{"kind":"textbox","id":"sh/zaxs7ax0","slide":5,"text":"100%","textPreview":"100%","textChars":4,"textLines":1,"bbox":[72,387,155,40]}
+{"kind":"textbox","id":"sh/bipgjy9g","slide":5,"text":"F1 SCORE","textPreview":"F1 SCORE","textChars":8,"textLines":1,"bbox":[72,426,155,20]}
+{"kind":"textbox","id":"sh/ahgfadsv","slide":5,"text":"Bedroom and bathroom extraction","textPreview":"Bedroom and bathroom extraction","textChars":31,"textLines":1,"bbox":[248,385,350,50]}
+{"kind":"textbox","id":"sh/xk7yl8r6","slide":5,"text":"Each entity evaluated on 100 labeled remarks","textPreview":"Each entity evaluated on 100 labeled remarks","textChars":44,"textLines":1,"bbox":[625,385,570,50]}
+{"kind":"shape","id":"sh/cjyxc3al","slide":5,"bbox":[248,452,947,0]}
+{"kind":"textbox","id":"sh/jmpgni9c","slide":5,"text":"93.6%","textPreview":"93.6%","textChars":5,"textLines":1,"bbox":[72,474,155,40]}
+{"kind":"textbox","id":"sh/ylgfedsr","slide":5,"text":"F1 SCORE","textPreview":"F1 SCORE","textChars":8,"textLines":1,"bbox":[72,513,155,20]}
+{"kind":"textbox","id":"sh/l8rypsri","slide":5,"text":"Price extraction","textPreview":"Price extraction","textChars":16,"textLines":1,"bbox":[248,472,350,50]}
+{"kind":"textbox","id":"sh/knyxgnax","slide":5,"text":"100% precision and 88% recall on 100 labeled remarks","textPreview":"100% precision and 88% recall on 100 labeled remarks","textChars":52,"textLines":1,"bbox":[625,472,570,50]}
+{"kind":"shape","id":"sh/7a9gri98","slide":5,"bbox":[248,539,947,0]}
+{"kind":"textbox","id":"sh/690fixs3","slide":5,"text":"77.0%","textPreview":"77.0%","textChars":5,"textLines":1,"bbox":[72,561,155,40]}
+{"kind":"textbox","id":"sh/4f2x8761","slide":5,"text":"RECALL","textPreview":"RECALL","textChars":6,"textLines":1,"bbox":[72,600,155,20]}
+{"kind":"textbox","id":"sh/5gbe1s7m","slide":5,"text":"Taxonomy feature extraction","textPreview":"Taxonomy feature extraction","textChars":27,"textLines":1,"bbox":[248,559,350,50]}
+{"kind":"textbox","id":"sh/id0f6xov","slide":5,"text":"191 of 248 gold labels found across 100 listings","textPreview":"191 of 248 gold labels found across 100 listings","textChars":48,"textLines":1,"bbox":[625,559,570,50]}
+{"kind":"notes","id":"nt/jytv3j","slide":5,"text":"Internal project sources: Verified by rerun on September 11, 2026. Sources: tests/test_week7.py; tests/test_week6.py; tests/test_week4.py; tests/test_numericf1.py; data/processed/taxonomy_eval_results.csv"}
+{"kind":"slide","id":"sl/zvy63c","slide":6,"title":"Accuracy notes","textShapes":14}
+{"kind":"textbox","id":"sh/14za9o7u","slide":6,"text":"Accuracy notes","textPreview":"Accuracy notes","textChars":14,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/e18ry98j","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/f2hs7ep4","slide":6,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/ora94j6l","slide":6,"text":"Intent classification","textPreview":"Intent classification","textChars":21,"textLines":1,"bbox":[72,138,500,42]}
+{"kind":"textbox","id":"sh/9sjado76","slide":6,"text":"The 100% result comes from a fixed 80/20 split of 200 labeled queries. The held-out set contains 40 examples across three intent labels.","textPreview":"The 100% result comes from a fixed 80/20 split of 200 labeled queries. The held-out set contains 40 examples across three intent labels.","textChars":136,"textLines":1,"bbox":[72,186,500,104]}
+{"kind":"shape","id":"sh/m5sr2t8f","slide":6,"bbox":[72,296,500,0]}
+{"kind":"textbox","id":"sh/n61sbyp0","slide":6,"text":"Structured fields","textPreview":"Structured fields","textChars":17,"textLines":1,"bbox":[72,312,500,42]}
+{"kind":"textbox","id":"sh/wvat836h","slide":6,"text":"This test checks whether the signal extractor preserves four existing listing fields. It does not measure free-text extraction.","textPreview":"This test checks whether the signal extractor preserves four existing listing fields. It does not measure free-text extraction.","textChars":127,"textLines":1,"bbox":[72,360,500,104]}
+{"kind":"shape","id":"sh/xw3ah872","slide":6,"bbox":[72,470,500,0]}
+{"kind":"textbox","id":"sh/ps7e9k3a","slide":6,"text":"Query parsing","textPreview":"Query parsing","textChars":13,"textLines":1,"bbox":[72,486,500,42]}
+{"kind":"textbox","id":"sh/oryx0fmp","slide":6,"text":"The 100% parser result is a coverage rate. A query counts as successful when it yields at least one filter, so this is not exact-match accuracy.","textPreview":"The 100% parser result is a coverage rate. A query counts as successful when it yields at least one filter, so this is not exact-match ac...","textChars":144,"textLines":1,"bbox":[72,534,500,104]}
+{"kind":"textbox","id":"sh/3qpw7alk","slide":6,"text":"Numeric entities","textPreview":"Numeric entities","textChars":16,"textLines":1,"bbox":[662,138,500,42]}
+{"kind":"textbox","id":"sh/2pgfy54z","slide":6,"text":"Bedroom and bathroom F1 reached 100%. Price extraction missed 12 of 100 labels, producing 88% recall and no false positives.","textPreview":"Bedroom and bathroom F1 reached 100%. Price extraction missed 12 of 100 labels, producing 88% recall and no false positives.","textChars":124,"textLines":1,"bbox":[662,186,500,104]}
+{"kind":"shape","id":"sh/dwrydk3m","slide":6,"bbox":[662,296,500,0]}
+{"kind":"textbox","id":"sh/cvix4fm1","slide":6,"text":"Taxonomy features","textPreview":"Taxonomy features","textChars":17,"textLines":1,"bbox":[662,312,500,42]}
+{"kind":"textbox","id":"sh/bu9wbalg","slide":6,"text":"The stored evaluation reports recall only. It measures found gold labels and does not penalize extra predicted features.","textPreview":"The stored evaluation reports recall only. It measures found gold labels and does not penalize extra predicted features.","textChars":120,"textLines":1,"bbox":[662,360,500,104]}
+{"kind":"shape","id":"sh/qtgf2p4v","slide":6,"bbox":[662,470,500,0]}
+{"kind":"textbox","id":"sh/t0ne1032","slide":6,"text":"Test run status","textPreview":"Test run status","textChars":15,"textLines":1,"bbox":[662,486,500,42]}
+{"kind":"textbox","id":"sh/szexsvmx","slide":6,"text":"Eight selected pytest cases passed, and the numeric F1 evaluation completed. Semantic retrieval lacks a current precision-at-k result because its model fixture was unavailable offline.","textPreview":"Eight selected pytest cases passed, and the numeric F1 evaluation completed. Semantic retrieval lacks a current precision-at-k result bec...","textChars":184,"textLines":1,"bbox":[662,534,500,104]}
+{"kind":"shape","id":"sh/4f254zyp","slide":6,"bbox":[628,138,0,500]}
+{"kind":"notes","id":"nt/zvy63c","slide":6,"text":"Internal project sources: Evaluation definitions in tests/test_week4.py, tests/test_week6.py, tests/test_week7.py, tests/test_numericf1.py, tests/test_semanticSearcher.py, and tests/test_week9.py"}
+{"kind":"slide","id":"sl/sqaxid","slide":7,"title":"A verified query path","textShapes":12}
+{"kind":"textbox","id":"sh/qpwb6pwb","slide":7,"text":"A verified query path","textPreview":"A verified query path","textChars":21,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/ds7uh4fm","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/cryt8zeh","slide":7,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/325cbaxk","slide":7,"text":"“3 bed 2 bath under 700k in Irvine”","textPreview":"“3 bed 2 bath under 700k in Irvine”","textChars":35,"textLines":1,"bbox":[76,140,1120,70]}
+{"kind":"shape","id":"sh/21wb25wz","slide":7,"bbox":[72,260,336,260]}
+{"kind":"textbox","id":"sh/ponudkfq","slide":7,"text":"PARSED","textPreview":"PARSED","textChars":6,"textLines":1,"bbox":[96,284,288,35]}
+{"kind":"textbox","id":"sh/o3et4fe5","slide":7,"text":"price ≤ $700,000\n3 bedrooms\n2 bathrooms\ncity = Irvine","textPreview":"price ≤ $700,000 | 3 bedrooms | 2 bathrooms | city = Irvine","textChars":53,"textLines":4,"bbox":[98,338,284,140]}
+{"kind":"textbox","id":"sh/nypcnex4","slide":7,"text":"›","textPreview":"›","textChars":1,"textLines":1,"bbox":[422,344,38,70]}
+{"kind":"shape","id":"sh/mxgve9wj","slide":7,"bbox":[472,260,336,260]}
+{"kind":"textbox","id":"sh/87y5cnel","slide":7,"text":"SEARCHED","textPreview":"SEARCHED","textChars":8,"textLines":1,"bbox":[496,284,288,35]}
+{"kind":"textbox","id":"sh/t87mlsfq","slide":7,"text":"52,742 database listings\nmetadata filters first\ntext relevance second","textPreview":"52,742 database listings | metadata filters first | text relevance second","textChars":69,"textLines":3,"bbox":[498,338,284,140]}
+{"kind":"textbox","id":"sh/65gnadwf","slide":7,"text":"›","textPreview":"›","textChars":1,"textLines":1,"bbox":[822,344,38,70]}
+{"kind":"shape","id":"sh/76p4jix0","slide":7,"bbox":[872,260,336,260]}
+{"kind":"textbox","id":"sh/k3e583e9","slide":7,"text":"RETURNED","textPreview":"RETURNED","textChars":8,"textLines":1,"bbox":[896,284,288,35]}
+{"kind":"textbox","id":"sh/l4nmh8fu","slide":7,"text":"1 matching listing\nIrvine, CA\n$610,000","textPreview":"1 matching listing | Irvine, CA | $610,000","textChars":38,"textLines":3,"bbox":[898,338,284,140]}
+{"kind":"textbox","id":"sh/y1wn6tw3","slide":7,"text":"Verification used the Dockerized API connected to the local idx_exchange database.","textPreview":"Verification used the Dockerized API connected to the local idx_exchange database.","textChars":82,"textLines":1,"bbox":[78,586,1110,44]}
+{"kind":"notes","id":"nt/sqaxid","slide":7,"text":"Internal project sources: scripts/main.py; observed API smoke-test response on 2026-08-31"}
+{"kind":"slide","id":"sl/794bkl","slide":8,"title":"REST API surface","textShapes":9}
+{"kind":"textbox","id":"sh/943ylovi","slide":8,"text":"REST API surface","textPreview":"REST API surface","textChars":16,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/m1sfqtcr","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/n21gjedc","slide":8,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/0faxoju1","slide":8,"text":"NLP","textPreview":"NLP","textChars":3,"textLines":1,"bbox":[64,146,330,48]}
+{"kind":"shape","id":"sh/1gjyhov6","slide":8,"bbox":[64,204,320,0]}
+{"kind":"textbox","id":"sh/edsfm9cv","slide":8,"text":"POST  /search\nPOST  /parse-query\nPOST  /extract-entities\nPOST  /summarize\nPOST  /check-compliance","textPreview":"POST  /search | POST  /parse-query | POST  /extract-entities | POST  /summarize | POST  /check-compliance","textChars":97,"textLines":5,"bbox":[64,236,330,300]}
+{"kind":"textbox","id":"sh/ze1gfedg","slide":8,"text":"Search data","textPreview":"Search data","textChars":11,"textLines":1,"bbox":[462,146,330,48]}
+{"kind":"shape","id":"sh/sbqxkzup","slide":8,"bbox":[462,204,320,0]}
+{"kind":"textbox","id":"sh/dczed4va","slide":8,"text":"PUT   /documents\nPOST  /documents/reload\n\nMySQL autoload at startup\nDatabase status in /ready","textPreview":"PUT   /documents | POST  /documents/reload |  | MySQL autoload at startup | Database status in /ready","textChars":93,"textLines":5,"bbox":[462,236,330,300]}
+{"kind":"textbox","id":"sh/p8zuhcfe","slide":8,"text":"Operations","textPreview":"Operations","textChars":10,"textLines":1,"bbox":[860,146,330,48]}
+{"kind":"shape","id":"sh/o7qt87et","slide":8,"bbox":[860,204,320,0]}
+{"kind":"textbox","id":"sh/36hcf2x8","slide":8,"text":"GET   /health\nGET   /ready\nGET   /cache/stats\nDELETE /cache\nGET   /openapi.json","textPreview":"GET   /health | GET   /ready | GET   /cache/stats | DELETE /cache | GET   /openapi.json","textChars":79,"textLines":5,"bbox":[860,236,330,300]}
+{"kind":"shape","id":"sh/258b6xwn","slide":8,"bbox":[64,580,1130,62]}
+{"kind":"textbox","id":"sh/14zudsf2","slide":8,"text":"Pydantic validates every request. FastAPI generates interactive documentation at /docs and /redoc.","textPreview":"Pydantic validates every request. FastAPI generates interactive documentation at /docs and /redoc.","textChars":98,"textLines":1,"bbox":[88,590,1082,42]}
+{"kind":"notes","id":"nt/794bkl","slide":8,"text":"Internal project sources: scripts/main.py route decorators and Pydantic models"}
+{"kind":"slide","id":"sl/bl6amx","slide":9,"title":"Production controls","textShapes":12}
+{"kind":"textbox","id":"sh/43uxorud","slide":9,"text":"Production controls","textPreview":"Production controls","textChars":19,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/j2lgfmds","slide":9,"text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/i1cfmhc7","slide":9,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/t8nylwvu","slide":9,"text":"10 requests / second / IP","textPreview":"10 requests / second / IP","textChars":25,"textLines":1,"bbox":[72,142,540,64]}
+{"kind":"textbox","id":"sh/s7ehsbu9","slide":9,"text":"Sliding-window rate limiting returns HTTP 429 with Retry-After and remaining-limit headers.","textPreview":"Sliding-window rate limiting returns HTTP 429 with Retry-After and remaining-limit headers.","textChars":91,"textLines":1,"bbox":[74,212,520,88]}
+{"kind":"shape","id":"sh/r65gj6d4","slide":9,"bbox":[640,142,0,410]}
+{"kind":"textbox","id":"sh/65wzq1cj","slide":9,"text":"Bounded TTL cache","textPreview":"Bounded TTL cache","textChars":17,"textLines":1,"bbox":[690,142,490,54]}
+{"kind":"textbox","id":"sh/9cjy9cvq","slide":9,"text":"Cached NLP responses include HIT or MISS headers. Corpus reloads invalidate stale search results.","textPreview":"Cached NLP responses include HIT or MISS headers. Corpus reloads invalidate stale search results.","textChars":97,"textLines":1,"bbox":[690,206,470,84]}
+{"kind":"textbox","id":"sh/8baxg7u5","slide":9,"text":"Structured logs","textPreview":"Structured logs","textChars":15,"textLines":1,"bbox":[72,390,340,42]}
+{"kind":"textbox","id":"sh/u14jq58z","slide":9,"text":"JSON request events include method, path, status, duration, client IP, and request ID.","textPreview":"JSON request events include method, path, status, duration, client IP, and request ID.","textChars":86,"textLines":1,"bbox":[72,438,340,122]}
+{"kind":"textbox","id":"sh/v2xkjapk","slide":9,"text":"Responsive concurrency","textPreview":"Responsive concurrency","textChars":22,"textLines":1,"bbox":[462,390,340,42]}
+{"kind":"textbox","id":"sh/w361svq5","slide":9,"text":"Synchronous NLP work runs in a thread pool instead of blocking FastAPI's event loop.","textPreview":"Synchronous NLP work runs in a thread pool instead of blocking FastAPI's event loop.","textChars":84,"textLines":1,"bbox":[462,438,340,122]}
+{"kind":"textbox","id":"sh/h4f2l07q","slide":9,"text":"Graceful diagnostics","textPreview":"Graceful diagnostics","textChars":20,"textLines":1,"bbox":[852,390,340,42]}
+{"kind":"textbox","id":"sh/i5oju58v","slide":9,"text":"Readiness reports database failures while health checks keep the process observable.","textPreview":"Readiness reports database failures while health checks keep the process observable.","textChars":84,"textLines":1,"bbox":[852,438,340,122]}
+{"kind":"notes","id":"nt/bl6amx","slide":9,"text":"Internal project sources: scripts/main.py TTLCache, SlidingWindowRateLimiter, cached_compute, middleware, and /ready"}
+{"kind":"slide","id":"sl/m6ej4y","slide":10,"title":"Database and container deployment","textShapes":18}
+{"kind":"textbox","id":"sh/7y58bytw","slide":10,"text":"Database and container deployment","textPreview":"Database and container deployment","textChars":33,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/8ze9k3a1","slide":10,"text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/90nad8bm","slide":10,"bbox":[64,102,1152,0]}
+{"kind":"shape","id":"sh/u1wrmds7","slide":10,"bbox":[58,160,245,125]}
+{"kind":"textbox","id":"sh/v25sfi9s","slide":10,"text":"MySQL","textPreview":"MySQL","textChars":5,"textLines":1,"bbox":[74,177,213,42]}
+{"kind":"textbox","id":"sh/w3y9onad","slide":10,"text":"rets_property","textPreview":"rets_property","textChars":13,"textLines":1,"bbox":[74,223,213,35]}
+{"kind":"textbox","id":"sh/h47ahsry","slide":10,"text":"›","textPreview":"›","textChars":1,"textLines":1,"bbox":[312,184,42,70]}
+{"kind":"shape","id":"sh/q5crats3","slide":10,"bbox":[363,160,245,125]}
+{"kind":"textbox","id":"sh/b6l83eto","slide":10,"text":"Startup loader","textPreview":"Startup loader","textChars":14,"textLines":1,"bbox":[379,177,213,42]}
+{"kind":"textbox","id":"sh/n6tcv658","slide":10,"text":"validated documents","textPreview":"validated documents","textChars":19,"textLines":1,"bbox":[379,223,213,35]}
+{"kind":"textbox","id":"sh/m5kb214n","slide":10,"text":"›","textPreview":"›","textChars":1,"textLines":1,"bbox":[617,184,42,70]}
+{"kind":"shape","id":"sh/98vuxgne","slide":10,"bbox":[668,160,245,125]}
+{"kind":"textbox","id":"sh/o72t4bmt","slide":10,"text":"FastAPI","textPreview":"FastAPI","textChars":7,"textLines":1,"bbox":[684,177,213,42]}
+{"kind":"textbox","id":"sh/z2tcr65c","slide":10,"text":"search corpus","textPreview":"search corpus","textChars":13,"textLines":1,"bbox":[684,223,213,35]}
+{"kind":"textbox","id":"sh/e1kby14r","slide":10,"text":"›","textPreview":"›","textChars":1,"textLines":1,"bbox":[922,184,42,70]}
+{"kind":"shape","id":"sh/14butwn2","slide":10,"bbox":[973,160,245,125]}
+{"kind":"textbox","id":"sh/032t0bmx","slide":10,"text":"Docker","textPreview":"Docker","textChars":6,"textLines":1,"bbox":[989,177,213,42]}
+{"kind":"textbox","id":"sh/re9snm50","slide":10,"text":"port 8000","textPreview":"port 8000","textChars":9,"textLines":1,"bbox":[989,223,213,35]}
+{"kind":"textbox","id":"sh/qd0buh4f","slide":10,"text":"Runtime configuration","textPreview":"Runtime configuration","textChars":21,"textLines":1,"bbox":[72,350,430,46]}
+{"kind":"textbox","id":"sh/u90v6h8n","slide":10,"text":"DB_HOST\nDB_PORT\nDB_USER\nDB_PASSWORD\nDB_NAME","textPreview":"DB_HOST | DB_PORT | DB_USER | DB_PASSWORD | DB_NAME","textChars":43,"textLines":5,"bbox":[74,408,220,185]}
+{"kind":"textbox","id":"sh/fa9cfmps","slide":10,"text":"Credentials stay outside source control. Docker reaches a host database through host.docker.internal.","textPreview":"Credentials stay outside source control. Docker reaches a host database through host.docker.internal.","textChars":101,"textLines":1,"bbox":[310,408,330,140]}
+{"kind":"textbox","id":"sh/gbid8rqd","slide":10,"text":"Container safeguards","textPreview":"Container safeguards","textChars":20,"textLines":1,"bbox":[708,350,430,46]}
+{"kind":"textbox","id":"sh/hcruhw7y","slide":10,"text":"Non-root UID 10001\nBuilt-in health check\nPinned application dependencies\nOptimized build context","textPreview":"Non-root UID 10001 | Built-in health check | Pinned application dependencies | Optimized build context","textChars":96,"textLines":4,"bbox":[710,408,440,170]}
+{"kind":"notes","id":"nt/m6ej4y","slide":10,"text":"Internal project sources: Dockerfile; .dockerignore; requirements.txt; scripts/main.py database settings and loader"}
+{"kind":"slide","id":"sl/vmovk9","slide":11,"title":"Current experience and next steps","textShapes":14}
+{"kind":"textbox","id":"sh/algnaxsf","slide":11,"text":"Current experience and next steps","textPreview":"Current experience and next steps","textChars":33,"textLines":1,"bbox":[64,38,1060,60]}
+{"kind":"textbox","id":"sh/xo7mlcr6","slide":11,"text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1162,43,54,40]}
+{"kind":"shape","id":"sh/wny5c7al","slide":11,"bbox":[64,102,1152,0]}
+{"kind":"textbox","id":"sh/jqp4nm9w","slide":11,"text":"Streamlit experience","textPreview":"Streamlit experience","textChars":20,"textLines":1,"bbox":[72,140,500,52]}
+{"kind":"textbox","id":"sh/ipgnehsr","slide":11,"text":"Natural-language query form\nAPI readiness and database status\nParsed filter inspection\nListing metadata and relevance scores\nClear timeout and rate-limit errors","textPreview":"Natural-language query form | API readiness and database status | Parsed filter inspection | Listing metadata and relevance scores | Clea...","textChars":160,"textLines":5,"bbox":[74,212,500,240]}
+{"kind":"shape","id":"sh/5srmpwr2","slide":11,"bbox":[630,142,0,430]}
+{"kind":"textbox","id":"sh/kri5grah","slide":11,"text":"Recommended next steps","textPreview":"Recommended next steps","textChars":22,"textLines":1,"bbox":[686,140,500,52]}
+{"kind":"textbox","id":"sh/7e94rm98","slide":11,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[690,214,38,38]}
+{"kind":"textbox","id":"sh/6d0nih8n","slide":11,"text":"Move cache and rate-limit state to Redis before adding multiple API workers.","textPreview":"Move cache and rate-limit state to Redis before adding multiple API workers.","textChars":76,"textLines":1,"bbox":[748,210,430,62]}
+{"kind":"textbox","id":"sh/4j2l4jup","slide":11,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[690,304,38,38]}
+{"kind":"textbox","id":"sh/5kb2xova","slide":11,"text":"Connect the existing FAISS semantic searcher to the database-loaded corpus.","textPreview":"Connect the existing FAISS semantic searcher to the database-loaded corpus.","textChars":75,"textLines":1,"bbox":[748,300,430,62]}
+{"kind":"textbox","id":"sh/ih0329cz","slide":11,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[690,394,38,38]}
+{"kind":"textbox","id":"sh/ji9kvedk","slide":11,"text":"Add authenticated operations endpoints and scheduled database refreshes.","textPreview":"Add authenticated operations endpoints and scheduled database refreshes.","textChars":72,"textLines":1,"bbox":[748,390,430,62]}
+{"kind":"textbox","id":"sh/sn2l8ju1","slide":11,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[690,484,38,38]}
+{"kind":"textbox","id":"sh/tob21ovm","slide":11,"text":"Expand integration tests around database failures and result quality.","textPreview":"Expand integration tests around database failures and result quality.","textChars":69,"textLines":1,"bbox":[748,480,430,62]}
+{"kind":"textbox","id":"sh/6lk369cv","slide":11,"text":"The project now supports an end-to-end demonstration: database to NLP API to interactive search.","textPreview":"The project now supports an end-to-end demonstration: database to NLP API to interactive search.","textChars":96,"textLines":1,"bbox":[74,622,1110,38]}
+{"kind":"notes","id":"nt/vmovk9","slide":11,"text":"Internal project sources: scripts/frontend/search.py; scripts/semantic_searcher.py; scripts/main.py; tests/"}
